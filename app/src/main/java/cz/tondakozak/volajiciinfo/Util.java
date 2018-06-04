@@ -13,10 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+import com.android.volley.*;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
@@ -24,6 +21,8 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Util {
     // id for update job
@@ -92,7 +91,7 @@ public class Util {
                     @Override
                     public void onResponse(JSONObject response) {
                         PeopleDB peopleDB = new PeopleDB(context);
-                        //Log.d("Download", response.toString());
+                        Log.d("Download", response.toString());
                         try {
                             //Log.d("Download", "downloaded");
 
@@ -129,7 +128,16 @@ public class Util {
 
 
                     }
-                });
+                }) {
+            // add headers
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("Secret-Key", context.getString(R.string.data_secret_key));
+
+                return params;
+            }
+        };
 
         // add request to the queue
         queue.add(jsonObjectRequest);
