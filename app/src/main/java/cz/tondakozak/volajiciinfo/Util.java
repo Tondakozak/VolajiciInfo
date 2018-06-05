@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 import com.android.volley.*;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -85,30 +86,29 @@ public class Util {
         //Log.d("Download", "Downloading");
 
         // create new json request
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+        StringRequest jsonObjectRequest = new StringRequest
+                (Request.Method.POST, url,
+                        new Response.Listener<String>() {
 
-                    @Override
-                    public void onResponse(JSONObject response) {
+        @Override
+                    public void onResponse(String response) {
                         PeopleDB peopleDB = new PeopleDB(context);
                         Log.d("Download", response.toString());
                         try {
-                            //Log.d("Download", "downloaded");
+                            // Convert response string to JSON
+                            JSONObject toJson = new JSONObject(response);
 
                             // Update db in the phone
-                            peopleDB.updateDBValues(response.getJSONArray("data"));
+                            peopleDB.updateDBValues(toJson.getJSONArray("data"));
                         } catch (JSONException e) {
-                            Toast.makeText(context, "VolajiciInfo: JSON má špatný formát",Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, context.getString(R.string.json_wrong_format),Toast.LENGTH_LONG).show();
                             e.printStackTrace();
                         }
 
                         // save time of downloading
                         Calendar c = Calendar.getInstance();
-                        System.out.println("Current time =&gt; "+c.getTime());
-
                         SimpleDateFormat df = new SimpleDateFormat("dd. MM. yyyy HH:mm:ss");
                         String formattedDate = df.format(c.getTime());
-
 
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString(context.getResources().getString(R.string.shared_pref_last_update), formattedDate);
@@ -117,14 +117,15 @@ public class Util {
                         // reload main activity - display current values
                         Intent intent1 = new Intent(context.getResources().getString(R.string.receiverReload));
                         context.sendBroadcast(intent1);
+
                     }
                 }, new Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e("DownloadDataError", error.getMessage());
-                       // Log.d("downloading", "Status code: "+(error.networkResponse.statusCode ));
-                        Toast.makeText(context, "VolajiciInfo: problém s aktualizací",Toast.LENGTH_LONG).show();
+                        // Log.d("downloading", "Status code: "+(error.networkResponse.statusCode ));
+                        Toast.makeText(context, context.getString(R.string.update_problem),Toast.LENGTH_LONG).show();
 
 
                     }
@@ -134,6 +135,16 @@ public class Util {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String>  params = new HashMap<String, String>();
                 params.put("Secret-Key", context.getString(R.string.data_secret_key));
+
+                return params;
+            }
+
+            // add post data
+            @Override
+            protected Map<String, String> getParams()
+            {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("key", context.getString(R.string.data_secret_key));
 
                 return params;
             }

@@ -102,4 +102,6 @@
     <string name="hours">hodin</string>
     <string name="edit">Upravit</string>
     <string name="data_url">Data URL</string>
+    <string name="json_wrong_format">VolajiciInfo: JSON má špatný formát</string>
+    <string name="update_problem">VolajiciInfo: problém s aktualizací</string>
 </resources>
