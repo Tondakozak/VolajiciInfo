@@ -123,10 +123,26 @@ public class Util {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("DownloadDataError", error.getMessage());
-                        // Log.d("downloading", "Status code: "+(error.networkResponse.statusCode ));
-                        Toast.makeText(context, context.getString(R.string.update_problem),Toast.LENGTH_LONG).show();
 
+                        /**
+                         * If Network error and in url is https, change protocol to http and try again
+                         */
+                        if (url.length() > 5 && url.substring(0, 5).equals("https") && error instanceof NoConnectionError) {
+                            Toast.makeText(context, context.getString(R.string.change_protocol),Toast.LENGTH_SHORT).show();
+                            Util.changeProtocol(url, context);
+                            Util.downloadData(context);
+                        }
+
+
+                        // if there is network response
+                        if (error.networkResponse != null) {
+                            // page not found
+                            if (error.networkResponse.statusCode == 404) {
+                                Toast.makeText(context, context.getString(R.string.page_not_found),Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            Toast.makeText(context, context.getString(R.string.update_problem),Toast.LENGTH_LONG).show();
+                        }
 
                     }
                 }) {
@@ -168,12 +184,31 @@ public class Util {
         }
     }
 
-    public static String changeProtocol(String url) {
+    /**
+     * Changes https to http and save it
+     * @param url
+     * @param context
+     */
+    public static void changeProtocol(String url, Context context) {
+        String newUrl;
         if (url.substring(0, 8).equals("https://")) {
-            return url.replace("https://", "http://");
+            newUrl = url.replace("https://", "http://");
         } else {
-            return url.replace("http://", "https://");
+            newUrl = url.replace("http://", "https://");
         }
+        saveURL(newUrl, context);
+    }
+
+    /**
+     * Save update url to shared preferences
+     * @param url
+     * @param context
+     */
+    public static void saveURL(String url, Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(context.getString(R.string.shared_pref_url), url);
+        editor.commit();
     }
 
 

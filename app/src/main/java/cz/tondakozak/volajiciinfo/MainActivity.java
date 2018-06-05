@@ -155,9 +155,7 @@ public class MainActivity extends AppCompatActivity {
                                         // add protocol
                                         newUrl = Util.addHTTPsProtocol(newUrl);
                                         // save to shared preferences
-                                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                                        editor.putString(res.getString(R.string.shared_pref_url), newUrl);
-                                        editor.commit();
+                                        Util.saveURL(newUrl, appContext);
 
 
                                         urlText.setText(newUrl);
@@ -200,6 +198,15 @@ public class MainActivity extends AppCompatActivity {
                 res.getString(
                         R.string.last_update_default));
         lastUpdateText.setText(res.getString(R.string.last_update_template, lastUpdate));
+
+        // set URL
+        final TextView urlText = (TextView)findViewById(R.id.textUrl);
+        final String urlForData = sharedPreferences.getString(
+                res.getString(
+                        R.string.shared_pref_url),
+                res.getString(
+                        R.string.url_default));
+        urlText.setText(urlForData);
     }
 
 /*

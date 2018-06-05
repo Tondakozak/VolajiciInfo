@@ -104,4 +104,6 @@
     <string name="data_url">Data URL</string>
     <string name="json_wrong_format">VolajiciInfo: JSON má špatný formát</string>
     <string name="update_problem">VolajiciInfo: problém s aktualizací</string>
+    <string name="change_protocol">VolajiciInfo: změna https na http</string>
+    <string name="page_not_found">VolajiciInfo: Adresa neexistuje, zkontrolujte url pro aktualizace</string>
 </resources>
