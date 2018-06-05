@@ -73,9 +73,13 @@ public class PeopleDB {
      */
     public Cursor getMan(String callerNumber) {
         SQLiteDatabase db = openHelper.getReadableDatabase();
-        String[] selectionArgs = { callerNumber};
+        String callerNumberWithoutCode = callerNumber;
+        if (callerNumber.length() > 4 && callerNumber.substring(0, 4).equals("+420")) {
+            callerNumberWithoutCode = callerNumber.substring(4);
+        }
+        String[] selectionArgs = { callerNumber, callerNumberWithoutCode};
         String[] columns = {"tel", "firstname", "surname", "orderInfo", "info"};
-        return db.query(TABLE_NAME, columns, "tel = ?", selectionArgs,
+        return db.query(TABLE_NAME, columns, "tel = ? OR tel=?", selectionArgs,
                 null, null, null, "1");
     }
 
@@ -86,9 +90,13 @@ public class PeopleDB {
      */
     private boolean manExists(String callerNumber) {
         SQLiteDatabase db = openHelper.getReadableDatabase();
-        String[] selectionArgs = { callerNumber};
+        String callerNumberWithoutCode = callerNumber;
+        if (callerNumber.length() > 4 && callerNumber.substring(0, 4).equals("+420")) {
+            callerNumberWithoutCode = callerNumber.substring(4);
+        }
+        String[] selectionArgs = { callerNumber, callerNumberWithoutCode};
         String[] columns = {"tel", "firstname", "surname", "orderInfo", "info"};
-        Cursor man = db.query(TABLE_NAME, columns, "tel = ?", selectionArgs,
+        Cursor man = db.query(TABLE_NAME, columns, "tel = ? OR tel = ?", selectionArgs,
                 null, null, null, "1");
         return man.getCount() > 0;
     }
@@ -111,8 +119,13 @@ public class PeopleDB {
         initialValues.put("`orderInfo`", orderInfo);
         initialValues.put("info", info);
 
+        String callerNumberWithoutCode = tel;
+        if (tel.length() > 4 && tel.substring(0, 4).equals("+420")) {
+            callerNumberWithoutCode = tel.substring(4);
+        }
+
         if (manExists(tel)) { // if the number exists, update the row
-            db.update(TABLE_NAME, initialValues, "tel=?", new String[] {tel});
+            db.update(TABLE_NAME, initialValues, "tel=? OR tel=?", new String[] {tel, callerNumberWithoutCode});
         } else {
             // Insert new row
             db.insertWithOnConflict(TABLE_NAME, null, initialValues, SQLiteDatabase.CONFLICT_IGNORE);
@@ -146,9 +159,11 @@ public class PeopleDB {
      */
     public void updateDBValues(JSONArray json) {
         for (int manId = 0; manId < json.length(); manId++) {
+
             try {
                 JSONObject manJson = json.getJSONObject(manId);
-                insertOrUpdateMan(manJson.getString("tel"), manJson.getString("firstname"), manJson.getString("surname"), manJson.getString("order"), "");
+                String tel = cleanNumberFormat(manJson.getString("tel"));
+                insertOrUpdateMan(tel, manJson.getString("firstname").trim(), manJson.getString("surname").trim(), manJson.getString("order").trim(), "");
             } catch (JSONException ex) {
                 Log.e("People DB", "Parse json error");
                 Log.e("PeopleDB", ex.getMessage());
@@ -168,5 +183,19 @@ public class PeopleDB {
                 null, null, null, null);
 
         return result.getCount();
+    }
+
+    /**
+     * Remove no digit characters except for leading +
+     * @param number
+     * @return
+     */
+    public static String cleanNumberFormat(String number) {
+        boolean firstPlus = (number.length() > 0 && number.charAt(0) == '+');
+        number = number.replaceAll("[^0-9]", "");
+        if (firstPlus) {
+            number = "+"+number;
+        }
+        return number;
     }
 }

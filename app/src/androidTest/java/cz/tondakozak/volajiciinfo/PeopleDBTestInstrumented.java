@@ -69,6 +69,15 @@ public class PeopleDBTestInstrumented {
         assertEquals(1, man.getCount());
     }
 
+
+    @Test
+    public void getManTestWithoutCode() {
+        peopleDB.insertOrUpdateMan("774423107", "tonda", "Kozák", "orderInfo", "infoInfo");
+        Cursor man = peopleDB.getMan("+420774423107");
+
+        assertEquals(1, man.getCount());
+    }
+
     @Test
     public void getMan2InsertsTest() {
         peopleDB.insertOrUpdateMan("+4207744231078", "tonda", "Kozák", "orderInfo", "infoInfo");
@@ -111,6 +120,33 @@ public class PeopleDBTestInstrumented {
             assertEquals(1, man2.getCount());
 
             Cursor man3 = peopleDB.getMan("6589sdsdsd");
+
+            assertEquals(1, man3.getCount());
+
+        } catch (JSONException e) {
+            fail();
+        }
+    }
+
+
+    public void updateDBValuesFormatTest() {
+        String jsonString = " [ {\"tel\": \"+420 787 545 121\", \"firstname\":\"Lukáš\", \"surname\":\"Novák\", \"order\":\"Informace o objednávce\"}," +
+                " {\"tel\": \"658231425\", \"firstname\":\"Jiří\", \"surname\":\"Kličko\", \"order\":\"Informace o objednávce bla bla\"}," +
+                " {\"tel\": \"774 423 107\", \"firstname\":\"Antonín\", \"surname\":\"Kozák\", \"order\":\"Lorem Ipsum je demonstrativní výplňový text používaný v tiskařském a knihařském průmyslu. \"}," +
+                " {\"tel\": \"+420421587931\", \"firstname\":\"Daniel\", \"surname\":\"Marko\", \"order\":\"Informace o objednávce bla bla bla\"}]";
+        try {
+            JSONArray jsonArray = new JSONArray(jsonString);
+            peopleDB.updateDBValues(jsonArray);
+
+            Cursor man = peopleDB.getMan("+420787545121");
+
+            assertEquals(1, man.getCount());
+
+            Cursor man2 = peopleDB.getMan("+420658231425");
+
+            assertEquals(1, man2.getCount());
+
+            Cursor man3 = peopleDB.getMan("+420774423107");
 
             assertEquals(1, man3.getCount());
 

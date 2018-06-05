@@ -156,7 +156,7 @@ public class Util {
 
 
     /**
-     * Add https protocol in the beggining of the string if there is no protocol 
+     * Add https protocol in the beggining of the string if there is no protocol
      * @param url
      * @return
      */
