@@ -88,14 +88,27 @@ public class MainActivity extends AppCompatActivity {
         minLatencyInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
+                int newLatency = 1;
                 try {
                     // save the new value to shared preferences
-                    int newLatency = Integer.parseInt(s.toString());
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putInt(res.getString(R.string.shared_pref_min_latency), newLatency);
-                    editor.commit();
+                    newLatency = Integer.parseInt(s.toString());
+
                 } catch (Exception e) {
                     e.printStackTrace();
+
+                }
+                // ensure min latency is 1
+                if (newLatency < 1) {
+                    newLatency = 1;
+                    minLatencyInput.setText(""+newLatency);
+                }
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt(res.getString(R.string.shared_pref_min_latency), newLatency);
+                editor.commit();
+
+                // reschedule job
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    Util.restartSchedulingJob(appContext);
                 }
             }
 
@@ -158,6 +171,7 @@ public class MainActivity extends AppCompatActivity {
                                         Util.saveURL(newUrl, appContext);
 
 
+                                        // show url on the screen
                                         urlText.setText(newUrl);
 
                                         // start downloading the data from new url

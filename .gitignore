@@ -9,3 +9,5 @@
 /captures
 .externalNativeBuild
 app/src/main/res/values/secrets.xml
+app/release/app-release.apk
+app/release/output.json

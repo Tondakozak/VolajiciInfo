@@ -63,6 +63,33 @@ public class Util {
         //builder.setRequiresCharging(false); // we don't care if the device is charging or not
         JobScheduler jobScheduler = context.getSystemService(JobScheduler.class);
         jobScheduler.schedule(builder.build());
+
+        Log.d("Scheduling job", "the service will run in: "+minHourLatency);
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public static void restartSchedulingJob(final Context context) {
+        JobScheduler jobScheduler = context.getSystemService(JobScheduler.class);
+
+        // if the job is already scheduled, cancel it
+        if (isJobSheduled(context, UPDATE_JOB_ID)) {
+            jobScheduler.cancel(UPDATE_JOB_ID);
+        }
+
+        // wait 5 seconds and then schedule it again in new threat (could be problem with immediate start)
+        Thread thread = new Thread(){
+            public void run(){
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                scheduleJob(context);
+            }
+        };
+
+        thread.start();
     }
 
 
@@ -117,6 +144,11 @@ public class Util {
                         // reload main activity - display current values
                         Intent intent1 = new Intent(context.getResources().getString(R.string.receiverReload));
                         context.sendBroadcast(intent1);
+
+                        // after successfull download, reschedule the job
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            Util.restartSchedulingJob(context);
+                        }
 
                     }
                 }, new Response.ErrorListener() {
