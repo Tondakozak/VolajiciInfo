@@ -151,6 +151,9 @@ public class MainActivity extends AppCompatActivity {
                                         if (newUrl.equals("")) {
                                             newUrl = res.getString(R.string.url_default);
                                         }
+
+                                        // add protocol
+                                        newUrl = Util.addHTTPsProtocol(newUrl);
                                         // save to shared preferences
                                         SharedPreferences.Editor editor = sharedPreferences.edit();
                                         editor.putString(res.getString(R.string.shared_pref_url), newUrl);

@@ -155,5 +155,26 @@ public class Util {
     }
 
 
+    /**
+     * Add https protocol in the beggining of the string if there is no protocol 
+     * @param url
+     * @return
+     */
+    public static String addHTTPsProtocol(String url) {
+        if (!url.substring(0, 7).equals("http://") && !url.substring(0, 8).equals("https://")) {
+            return "https://"+url;
+        } else {
+            return url;
+        }
+    }
+
+    public static String changeProtocol(String url) {
+        if (url.substring(0, 8).equals("https://")) {
+            return url.replace("https://", "http://");
+        } else {
+            return url.replace("http://", "https://");
+        }
+    }
+
 
 }
