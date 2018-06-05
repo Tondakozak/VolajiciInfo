@@ -5,9 +5,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -54,6 +57,16 @@ public class OverlayActivity extends AppCompatActivity{
         callerName.setText(NotificationInfo.callerName);
         callerInfo.setText(NotificationInfo.callerOrder);
 
+
+        // listener for closing the activity
+        ConstraintLayout mydialog = (ConstraintLayout)findViewById(R.id.dialogOverlay);
+        mydialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                Log.d("OVerlay", "zavíráme krám");
+            }
+        });
     }
 
     @Override
