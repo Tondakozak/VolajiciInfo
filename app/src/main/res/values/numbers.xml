@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="def_min_hour_latency">20</integer>
+    <integer name="def_auto_hide_dialog_delay">30</integer>
+
+</resources>

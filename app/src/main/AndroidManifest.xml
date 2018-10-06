@@ -20,7 +20,6 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -41,9 +40,19 @@
             android:label="Update DB service"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
+        <activity
+            android:name=".OverlayActivity"
+            android:theme="@style/Theme.TransparentCompat" />
+        <activity android:name=".SettingActivity"
+            android:label="Setting">
+            android:parentActivityName=".MainActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
 
-        <activity android:name=".OverlayActivity"
-            android:theme="@style/Theme.TransparentCompat"></activity>
+
+        </activity>
     </application>
 
 </manifest>

@@ -19,6 +19,11 @@
     <string name="shared_pref_min_latency">minLatency</string>
     <string name="shared_pref_last_update">lastUpdate</string>
     <string name="shared_pref_url">dataUrl</string>
+    <string name="shared_pref_launch_on_start">launchOnStart</string>
+    <string name="shared_pref_on_background">onBackground</string>
+    <string name="shared_pref_auto_hide_dialog">autoHideDialog</string>
+    <string name="shared_pref_auto_hide_dialog_delay">autoHideDialogDelay</string>
+    <string name="shared_pref_number_not_found">numberNotFound</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->
@@ -101,9 +106,20 @@
     <string name="updates_frequency">Interval aktualizací:</string>
     <string name="hours">hodin</string>
     <string name="edit">Upravit</string>
-    <string name="data_url">Data URL</string>
+    <string name="data_url">Zdroj dat URL</string>
     <string name="json_wrong_format">VolajiciInfo: JSON má špatný formát</string>
     <string name="update_problem">VolajiciInfo: problém s aktualizací</string>
     <string name="change_protocol">VolajiciInfo: změna https na http</string>
     <string name="page_not_found">VolajiciInfo: Adresa neexistuje, zkontrolujte url pro aktualizace</string>
+    <string name="zapnout_pri_startu">Zapnout při spuštění systému</string>
+    <string name="povolit_beh_na_pozadi">Povolit běh na pozadí</string>
+    <string name="data_a_aktualizace">Data a aktualizace</string>
+    <string name="nezobrazit_dialog">Nezobrazovat dialog</string>
+    <string name="hlaska_nenalezeno">Hláška: Číslo nenalezeno</string>
+    <string name="cislo_nenalezeno">Číslo nenalezeno</string>
+    <string name="automaticky_skryvat_dialog">Automaticky skrývat dialog</string>
+    <string name="chovani_aplikace">Chování aplikace</string>
+    <string name="seconds">Sekund</string>
+    <string name="delay">Prodleva:</string>
+    <string name="beh_systemu">Běh systému</string>
 </resources>

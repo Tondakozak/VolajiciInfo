@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SettingActivity">
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:text="@string/beh_systemu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView4" />
+
+            <Switch
+                android:text="@string/zapnout_pri_startu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/switchLauchOnStart"
+                android:textAlignment="viewStart"
+                android:switchTextAppearance="@style/TextAppearance.AppCompat"
+                android:switchPadding="10dp"
+                android:checked="true"
+                tools:checked="true"
+                android:showText="true"
+                android:splitTrack="true"
+                tools:layout_editor_absoluteY="265dp"
+                tools:layout_editor_absoluteX="8dp"
+                android:gravity="start"
+                android:paddingTop="10px"
+                android:paddingBottom="10px" />
+
+            <Switch
+                android:text="@string/povolit_beh_na_pozadi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/switchOnBackground"
+                android:textAlignment="viewStart"
+                android:switchTextAppearance="@style/TextAppearance.AppCompat"
+                android:switchPadding="10dp"
+                android:checked="true"
+                tools:checked="true"
+                android:showText="true"
+                android:splitTrack="true"
+                tools:layout_editor_absoluteY="265dp"
+                tools:layout_editor_absoluteX="8dp"
+                android:gravity="start"
+                android:paddingTop="10px"
+                android:paddingBottom="10px" />
+
+            <TextView
+                android:text="@string/chovani_aplikace"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView" />
+
+            <Switch
+                android:text="@string/automaticky_skryvat_dialog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/switchHideDialog"
+                android:textAlignment="viewStart"
+                android:switchTextAppearance="@style/TextAppearance.AppCompat.Button"
+                android:switchPadding="10dp"
+                android:checked="true"
+                tools:checked="true"
+                android:showText="true"
+                android:splitTrack="true"
+                tools:layout_editor_absoluteY="265dp"
+                tools:layout_editor_absoluteX="8dp"
+                android:gravity="start" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:id="@+id/linearLayoutHideDelay"
+                app:layout_constraintHorizontal_bias="0.0"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/peopleNumberText"
+                android:gravity="top"
+                android:layout_weight="2">
+
+                <TextView
+                    android:text="@string/delay"
+                    android:layout_width="36dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView2"
+                    android:layout_weight="2"
+                    android:textAlignment="textStart" />
+
+                <EditText
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:ems="10"
+                    android:id="@+id/hideDialogDelayInput"
+                    android:layout_weight="1"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:text="@string/seconds"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/secondsTextView"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+            <TextView
+                android:text="@string/cislo_nenalezeno"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView7" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/radioGroupNotFound">
+
+                <RadioButton
+                    android:text="@string/nezobrazit_dialog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/radioButtonNotShowDialog"
+                    android:layout_weight="1"
+                    android:checked="true" />
+
+                <RadioButton
+                    android:text="@string/hlaska_nenalezeno"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/radioButtonDialogNotFound"
+                    android:layout_weight="1" />
+            </RadioGroup>
+
+            <TextView
+                android:text="@string/data_a_aktualizace"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView5" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:id="@+id/linearLayoutUpdateDelay"
+                app:layout_constraintHorizontal_bias="0.0"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/peopleNumberText"
+                android:gravity="top">
+
+                <TextView
+                    android:text="@string/updates_frequency"
+                    android:layout_width="36dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/updateIntervalTextView"
+                    android:layout_weight="2"
+                    android:textAlignment="textStart" />
+
+                <EditText
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:ems="10"
+                    android:id="@+id/minLatencyInput"
+                    android:layout_weight="1"
+                    android:textAlignment="center"
+                    android:selectAllOnFocus="false" />
+
+                <TextView
+                    android:text="@string/hours"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView3"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+            <TextView
+                android:text="@string/number_of_people_template"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/peopleNumberText"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintHorizontal_bias="0.0"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/lastUpdate2" />
+
+            <TextView
+                android:text="@string/last_update_template"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/lastUpdate2"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/updateDataButton" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:text="@string/update_data"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:id="@+id/updateDataButton"
+                    android:onClick="startDownloadOnclick"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="8dp"
+                    style="@android:style/Widget.Material.Button.Toggle"
+                    android:background="@android:drawable/btn_default_small"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:text="@string/smazat_data"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:id="@+id/deleteDataButton"
+                    android:onClick="deleteDBOnclick"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    style="@android:style/Widget.Material.Button.Colored"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <TextView
+                android:text="@string/data_url"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/dataUrlHeader"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayoutUpdateDelay"
+                android:textColor="@color/colorPrimary" />
+
+            <TextView
+                android:text="@string/url_default"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textUrl"
+                android:layout_weight="3" />
+
+            <Button
+                android:text="@string/edit"
+                android:layout_height="wrap_content"
+                android:id="@+id/buttonEditUrl"
+                android:layout_weight="2"
+                style="@android:style/Widget.Material.Button.Toggle"
+                android:layout_width="wrap_content"
+                android:background="@android:drawable/btn_default_small" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>
