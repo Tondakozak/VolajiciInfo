@@ -121,5 +121,5 @@
     <string name="chovani_aplikace">Chování aplikace</string>
     <string name="seconds">Sekund</string>
     <string name="delay">Prodleva:</string>
-    <string name="beh_systemu">Běh systému</string>
+    <string name="beh_systemu">Běh aplikace na pozadí</string>
 </resources>

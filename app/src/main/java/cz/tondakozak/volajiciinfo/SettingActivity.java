@@ -178,7 +178,7 @@ public class SettingActivity extends AppCompatActivity {
 
         setSwitchLaunchOnStart(switchLaunchOnStart);
 
-        setSwitchOnBackground(switchOnBackground);
+        setSwitchOnBackground(switchOnBackground, switchLaunchOnStart);
 
         setSwitchHideDialog(switchHideDialog);
         setHideDialogDelay(delayInput);
@@ -238,6 +238,16 @@ public class SettingActivity extends AppCompatActivity {
     private void setSwitchLaunchOnStart(Switch mySwitch) {
 
         // set value
+        final boolean onBackground = sharedPreferences.getBoolean(res.getString(R.string.shared_pref_on_background), true);
+        /*if (onBackground) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(appContext.getString(R.string.shared_pref_launch_on_start), false);
+            editor.commit();
+        }*/
+
+        //  set switch disabled if the background process is enabled
+        mySwitch.setEnabled(!onBackground);
+
         final boolean launchOnStart = sharedPreferences.getBoolean(res.getString(R.string.shared_pref_launch_on_start), true);
         mySwitch.setChecked(launchOnStart);
 
@@ -258,7 +268,7 @@ public class SettingActivity extends AppCompatActivity {
         });
     }
 
-    private void setSwitchOnBackground(Switch mySwitch) {
+    private void setSwitchOnBackground(Switch mySwitch, final Switch switchLaunchOnStart) {
         // set value
         final boolean onBackground = sharedPreferences.getBoolean(res.getString(R.string.shared_pref_on_background), true);
         mySwitch.setChecked(onBackground);
@@ -270,10 +280,23 @@ public class SettingActivity extends AppCompatActivity {
                 editor.commit();
 
                 if (isChecked) {
-                    // spustit běh na pozadí
+                    // schedule update job
+                    Util.scheduleJob(appContext);
                 } else {
-                    // zastavit běh na pozadí
+                    // cancel scheduled job
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        Util.cancelScheduledJob(appContext, Util.UPDATE_JOB_ID);
+                    }
                 }
+
+                // set switch for launch on start false if background process is enabled and disable the switch
+                editor.putBoolean(appContext.getString(R.string.shared_pref_launch_on_start), !isChecked);
+                editor.commit();
+
+
+                //  set switch disabled if the background process is enabled
+                switchLaunchOnStart.setEnabled(!isChecked);
+                switchLaunchOnStart.setChecked(!isChecked);
             }
         });
     }

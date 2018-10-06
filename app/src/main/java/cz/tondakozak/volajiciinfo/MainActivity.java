@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         // If update job is not scheduled, schedule it
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            if (!Util.isJobSheduled(appContext, Util.UPDATE_JOB_ID)) {
+            if (!Util.isJobScheduled(appContext, Util.UPDATE_JOB_ID)) {
                 Util.scheduleJob(appContext);
             }
         }

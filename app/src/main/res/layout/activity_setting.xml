@@ -30,10 +30,10 @@
                 android:id="@+id/textView4" />
 
             <Switch
-                android:text="@string/zapnout_pri_startu"
+                android:text="@string/povolit_beh_na_pozadi"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/switchLauchOnStart"
+                android:id="@+id/switchOnBackground"
                 android:textAlignment="viewStart"
                 android:switchTextAppearance="@style/TextAppearance.AppCompat"
                 android:switchPadding="10dp"
@@ -48,10 +48,10 @@
                 android:paddingBottom="10px" />
 
             <Switch
-                android:text="@string/povolit_beh_na_pozadi"
+                android:text="@string/zapnout_pri_startu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/switchOnBackground"
+                android:id="@+id/switchLauchOnStart"
                 android:textAlignment="viewStart"
                 android:switchTextAppearance="@style/TextAppearance.AppCompat"
                 android:switchPadding="10dp"

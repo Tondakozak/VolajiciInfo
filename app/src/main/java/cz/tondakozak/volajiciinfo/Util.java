@@ -9,12 +9,9 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.WindowManager;
 import android.widget.Toast;
 import com.android.volley.*;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
@@ -36,7 +33,7 @@ public class Util {
      * @return
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public static boolean isJobSheduled(Context context, int jobId) {
+    public static boolean isJobScheduled(Context context, int jobId) {
         JobScheduler scheduler = (JobScheduler) context.getSystemService( Context.JOB_SCHEDULER_SERVICE );
         return scheduler.getPendingJob(jobId) != null;
     }
@@ -47,35 +44,42 @@ public class Util {
      * @param context
      */
     public static void scheduleJob(Context context) {
-        // get min latency from shared preferences (20 is default value)
+
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        int minHourLatency = sharedPreferences.getInt(context.getResources().getString(R.string.shared_pref_min_latency), 20);
 
-        // create a job
-        ComponentName serviceComponent = new ComponentName(context, UpdateService.class);
-        JobInfo.Builder builder = new JobInfo.Builder(Util.UPDATE_JOB_ID, serviceComponent);
+        // shedule update job only if it is allowed in setting
+        if (sharedPreferences.getBoolean(context.getResources().getString(R.string.shared_pref_on_background), true)) {
+            // get min latency from shared preferences (20 is default value)
+            int minHourLatency = sharedPreferences.getInt(context.getResources().getString(R.string.shared_pref_min_latency), 20);
 
-        // set requirements
-        builder.setMinimumLatency(minHourLatency*60*60 * 1000); // wait at least
-        //builder.setOverrideDeadline(30 * 1000); // maximum delay
-        builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY); // require any network
-        //builder.setRequiresDeviceIdle(true); // device should be idle
-        //builder.setRequiresCharging(false); // we don't care if the device is charging or not
-        JobScheduler jobScheduler = context.getSystemService(JobScheduler.class);
-        jobScheduler.schedule(builder.build());
+            // create a job
+            ComponentName serviceComponent = new ComponentName(context, UpdateService.class);
+            JobInfo.Builder builder = new JobInfo.Builder(Util.UPDATE_JOB_ID, serviceComponent);
 
-        Log.d("Scheduling job", "the service will run in: "+minHourLatency);
+            // set requirements
+            builder.setMinimumLatency(minHourLatency*60*60 * 1000); // wait at least
+            //builder.setOverrideDeadline(30 * 1000); // maximum delay
+            builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY); // require any network
+            //builder.setRequiresDeviceIdle(true); // device should be idle
+            //builder.setRequiresCharging(false); // we don't care if the device is charging or not
+            JobScheduler jobScheduler = context.getSystemService(JobScheduler.class);
+            jobScheduler.schedule(builder.build());
+
+            Log.d("Scheduling job", "the service will run in: "+minHourLatency);
+        } else {
+            Log.d("Scheduling job", "Background task is not allowed");
+        }
+
+
     }
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public static void restartSchedulingJob(final Context context) {
-        JobScheduler jobScheduler = context.getSystemService(JobScheduler.class);
+
 
         // if the job is already scheduled, cancel it
-        if (isJobSheduled(context, UPDATE_JOB_ID)) {
-            jobScheduler.cancel(UPDATE_JOB_ID);
-        }
+        cancelScheduledJob(context, UPDATE_JOB_ID);
 
         // wait 5 seconds and then schedule it again in new threat (could be problem with immediate start)
         Thread thread = new Thread(){
@@ -92,6 +96,15 @@ public class Util {
         thread.start();
     }
 
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public static void cancelScheduledJob(Context context, int jobId) {
+        // if the job is already scheduled, cancel it
+        JobScheduler jobScheduler = context.getSystemService(JobScheduler.class);
+        if (isJobScheduled(context, jobId)) {
+            jobScheduler.cancel(jobId);
+        }
+    }
 
     /**
      * Download JSON with data
