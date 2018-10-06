@@ -21,13 +21,15 @@ import android.view.Gravity;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Holds information about current caller
  * Find the caller and start the Overlay Activity
  */
 public class NotificationInfo extends Fragment{
-    public static String callerName = "No name";
     public static String callerOrder = "No Info";
 
     public static boolean autoHideDialog;
@@ -48,18 +50,31 @@ public class NotificationInfo extends Fragment{
 
         if (caller.getCount() > 0) { // if the number is in DB
             caller.moveToFirst();
-            String name = caller.getString(caller.getColumnIndex("firstname")) + " "+caller.getString(caller.getColumnIndex("surname"));
-            String info = caller.getString(caller.getColumnIndex("orderInfo")) + "\n "
-                    + caller.getString(caller.getColumnIndex("info"));
 
-            callerName = name;
+            String info = "";
+            JSONArray infoArray = new JSONArray();
+
+            try {
+                infoArray = new JSONArray(caller.getString(caller.getColumnIndex("info")));
+
+                for (int jsonItemId = 0; jsonItemId < infoArray.length(); jsonItemId++) {
+                    info += infoArray.get(jsonItemId);
+                    info += "\n";
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+
+
             callerOrder = info;
 
 
         } else {
             // if the number was not found
-            callerName = "Neznámý volající";
-            callerOrder = "";
+            callerOrder = "Neznámý volající";
+
         }
 
         // start activity for showing info

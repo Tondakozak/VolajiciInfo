@@ -32,7 +32,6 @@ public class OverlayActivity extends AppCompatActivity{
         }
     };
 
-    TextView callerName;
     TextView callerInfo;
 
 
@@ -59,10 +58,8 @@ public class OverlayActivity extends AppCompatActivity{
         setContentView(R.layout.activity_overlay);
 
         // Set info about the caller
-        callerName = (TextView)findViewById(R.id.callerName);
         callerInfo = (TextView)findViewById(R.id.callerInfo);
 
-        callerName.setText(NotificationInfo.callerName);
         callerInfo.setText(NotificationInfo.callerOrder);
 
 

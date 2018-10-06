@@ -18,7 +18,7 @@ import org.json.JSONObject;
 public class PeopleDB {
 
     protected static final String DATABASE_NAME = "volajiciInfoDB2";
-    protected static final int DATABASE_VERSION = 2;
+    protected static final int DATABASE_VERSION = 3;
 
     protected static final String TABLE_NAME = "people";
 
@@ -40,10 +40,7 @@ public class PeopleDB {
             String tableCreationSQL =
                     "  CREATE TABLE `people` (" +
                             "`_id` INTEGER PRIMARY KEY," +
-                            "  `firstname` text NOT NULL," +
-                            "  `surname` text NOT NULL," +
                             "  `tel` text NOT NULL," +
-                            "  `orderInfo` text NOT NULL," +
                             "  `info` text NOT NULL" +
                             ");";
             db.execSQL(tableCreationSQL);
@@ -78,7 +75,7 @@ public class PeopleDB {
             callerNumberWithoutCode = callerNumber.substring(4);
         }
         String[] selectionArgs = { callerNumber, callerNumberWithoutCode};
-        String[] columns = {"tel", "firstname", "surname", "orderInfo", "info"};
+        String[] columns = {"tel", "info"};
         return db.query(TABLE_NAME, columns, "tel = ? OR tel=?", selectionArgs,
                 null, null, null, "1");
     }
@@ -95,7 +92,7 @@ public class PeopleDB {
             callerNumberWithoutCode = callerNumber.substring(4);
         }
         String[] selectionArgs = { callerNumber, callerNumberWithoutCode};
-        String[] columns = {"tel", "firstname", "surname", "orderInfo", "info"};
+        String[] columns = {"tel", "info"};
         Cursor man = db.query(TABLE_NAME, columns, "tel = ? OR tel = ?", selectionArgs,
                 null, null, null, "1");
         return man.getCount() > 0;
@@ -104,19 +101,13 @@ public class PeopleDB {
     /**
      * Insert new value into db. If the number already exists in it, update the existing one
      * @param tel
-     * @param firstname
-     * @param surname
-     * @param orderInfo
      * @param info
      */
-    public void insertOrUpdateMan(String tel, String firstname, String surname, String orderInfo, String info) {
+    public void insertOrUpdateMan(String tel, String info) {
         SQLiteDatabase db = openHelper.getWritableDatabase();
 
         ContentValues initialValues = new ContentValues();
         initialValues.put("tel", tel);
-        initialValues.put("firstname", firstname);
-        initialValues.put("surname", surname);
-        initialValues.put("`orderInfo`", orderInfo);
         initialValues.put("info", info);
 
         String callerNumberWithoutCode = tel;
@@ -130,6 +121,28 @@ public class PeopleDB {
             // Insert new row
             db.insertWithOnConflict(TABLE_NAME, null, initialValues, SQLiteDatabase.CONFLICT_IGNORE);
         }
+
+
+        // close db connection
+        db.close();
+    }
+
+    /**
+     * Insert new value into db.
+     * @param tel
+     * @param info
+     */
+    public void insertMan(String tel, String info) {
+        SQLiteDatabase db = openHelper.getWritableDatabase();
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put("tel", tel);
+        initialValues.put("info", info);
+
+
+        // Insert new row
+        db.insertWithOnConflict(TABLE_NAME, null, initialValues, SQLiteDatabase.CONFLICT_IGNORE);
+
 
 
         // close db connection
@@ -158,12 +171,17 @@ public class PeopleDB {
      * @param json
      */
     public void updateDBValues(JSONArray json) {
+
+        // delete old data
+        deleteData();
+
+        // insert new data
         for (int manId = 0; manId < json.length(); manId++) {
 
             try {
                 JSONObject manJson = json.getJSONObject(manId);
                 String tel = cleanNumberFormat(manJson.getString("tel"));
-                insertOrUpdateMan(tel, manJson.getString("firstname").trim(), manJson.getString("surname").trim(), manJson.getString("order").trim(), "");
+                insertMan(tel, manJson.getJSONArray("lines").toString());
             } catch (JSONException ex) {
                 Log.e("People DB", "Parse json error");
                 Log.e("PeopleDB", ex.getMessage());
