@@ -15,6 +15,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  * Activity with "dialog" about the caller
  */
@@ -25,12 +28,17 @@ public class OverlayActivity extends AppCompatActivity{
     BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            finish();
+            closeActivity();
         }
     };
 
     TextView callerName;
     TextView callerInfo;
+
+
+    // Auto hide activity
+    TimerTask autoHideTimerTask;
+    Timer autoHideTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,10 +71,20 @@ public class OverlayActivity extends AppCompatActivity{
         mydialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
-                Log.d("OVerlay", "zavíráme krám");
+                closeActivity();
             }
         });
+
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+
+        // start timer for auto hide dialog
+        startTimerForAutoHide();
     }
 
     @Override
@@ -75,4 +93,60 @@ public class OverlayActivity extends AppCompatActivity{
         // Unregister the receiver
         unregisterReceiver(mBroadcastReceiver);
     }
+
+
+    /**
+     * Close dialog
+     */
+    public void closeActivity() {
+        stopTimerForAutoHide();
+        finish();
+        Log.d("Overlay", "zavíráme krám");
+    }
+
+
+    /**
+     * Start timer for auto hide dialog
+     */
+    public void startTimerForAutoHide() {
+
+
+        // if the auto-hiding is set to on
+        if (NotificationInfo.autoHideDialog) {
+            autoHideTimer = new Timer();
+
+            initializeTimerTask();
+
+            autoHideTimer.schedule(autoHideTimerTask, (long)NotificationInfo.autoHideDialogDelay);
+        }
+
+
+    }
+
+    /**
+     * Stop auto hide timer
+     */
+    public void stopTimerForAutoHide() {
+        if (autoHideTimer != null) {
+            autoHideTimer.cancel();
+            autoHideTimer = null;
+        }
+    }
+
+
+    /**
+     * Initiate timer task for auto hide dialog
+     */
+    public void initializeTimerTask() {
+        autoHideTimerTask = new TimerTask() {
+
+            public void run() {
+                closeActivity();
+            }
+
+        };
+
+    }
+
+
 }

@@ -5,6 +5,7 @@ import android.app.*;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -13,6 +14,7 @@ import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
@@ -28,6 +30,9 @@ public class NotificationInfo extends Fragment{
     public static String callerName = "No name";
     public static String callerOrder = "No Info";
 
+    public static boolean autoHideDialog;
+    public static int autoHideDialogDelay;
+
     /**
      * Show info about caller - find number in the db and start Overlay Activity
      * @param context
@@ -37,6 +42,9 @@ public class NotificationInfo extends Fragment{
         // get info about caller form db
         PeopleDB peopleDB = new PeopleDB(context);
         Cursor caller = peopleDB.getMan(tel);
+
+        // set values for auto-hide dialog
+        setAutoHide(context);
 
         if (caller.getCount() > 0) { // if the number is in DB
             caller.moveToFirst();
@@ -67,6 +75,18 @@ public class NotificationInfo extends Fragment{
         }
         context.startActivity(i);
     }
+
+    public static void setAutoHide(Context context) {
+        Context appContext = context;
+        Resources res = appContext.getResources();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext);
+        autoHideDialog = sharedPreferences.getBoolean(res.getString(R.string.shared_pref_auto_hide_dialog), false);
+
+        autoHideDialogDelay = sharedPreferences.getInt(res.getString(R.string.shared_pref_auto_hide_dialog_delay), res.getInteger(R.integer.def_auto_hide_dialog_delay));
+        autoHideDialogDelay *= 1000; // convert seconds to milliseconds
+
+    }
+
 
     /*
     public static void setCallerInfo(Context context, String tel) {
