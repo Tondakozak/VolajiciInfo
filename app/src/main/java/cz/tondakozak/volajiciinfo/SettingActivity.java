@@ -30,6 +30,7 @@ public class SettingActivity extends AppCompatActivity {
     Resources res;
     SharedPreferences sharedPreferences;
     PeopleDB peopleDB;
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,8 @@ public class SettingActivity extends AppCompatActivity {
         final EditText minLatencyInput = (EditText)findViewById(R.id.minLatencyInput);
         final int minHourLatency = sharedPreferences.getInt(res.getString(R.string.shared_pref_min_latency), res.getInteger(R.integer.def_min_hour_latency));
         minLatencyInput.setText(minHourLatency+"");
+
+        minLatencyInput.clearFocus();
 
         // manage updating min latency
         minLatencyInput.addTextChangedListener(new TextWatcher() {
@@ -330,6 +333,8 @@ public class SettingActivity extends AppCompatActivity {
 
         final int delay = sharedPreferences.getInt(res.getString(R.string.shared_pref_auto_hide_dialog_delay), res.getInteger(R.integer.def_auto_hide_dialog_delay));
         delayInput.setText(delay+"");
+
+        delayInput.clearFocus();
 
         // manage updating min latency
         delayInput.addTextChangedListener(new TextWatcher() {

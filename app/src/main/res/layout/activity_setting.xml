@@ -44,8 +44,8 @@
                 tools:layout_editor_absoluteY="265dp"
                 tools:layout_editor_absoluteX="8dp"
                 android:gravity="start"
-                android:paddingTop="10px"
-                android:paddingBottom="10px" />
+                android:paddingTop="@dimen/padding_value"
+                android:paddingBottom="@dimen/padding_value" />
 
             <Switch
                 android:text="@string/zapnout_pri_startu"
@@ -62,8 +62,14 @@
                 tools:layout_editor_absoluteY="265dp"
                 tools:layout_editor_absoluteX="8dp"
                 android:gravity="start"
-                android:paddingTop="10px"
-                android:paddingBottom="10px" />
+                android:paddingTop="@dimen/padding_value"
+                android:paddingBottom="@dimen/padding_value" />
+
+            <view
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/line_height"
+                android:background="@color/colorLine"
+                class="android.support.design.widget.TabItem" />
 
             <TextView
                 android:text="@string/chovani_aplikace"
@@ -85,7 +91,9 @@
                 android:splitTrack="true"
                 tools:layout_editor_absoluteY="265dp"
                 tools:layout_editor_absoluteX="8dp"
-                android:gravity="start" />
+                android:gravity="start"
+                android:paddingBottom="@dimen/padding_value"
+                android:paddingTop="@dimen/padding_value" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -128,6 +136,13 @@
 
             </LinearLayout>
 
+            <view
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/line_height"
+                android:background="@color/colorLine"
+                android:layout_weight="2"
+                class="android.support.design.widget.TabItem" />
+
             <TextView
                 android:text="@string/cislo_nenalezeno"
                 android:layout_width="match_parent"
@@ -154,6 +169,13 @@
                     android:id="@+id/radioButtonDialogNotFound"
                     android:layout_weight="1" />
             </RadioGroup>
+
+            <view
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/line_height"
+                android:background="@color/colorLine"
+                android:layout_weight="2"
+                class="android.support.design.widget.TabItem" />
 
             <TextView
                 android:text="@string/data_a_aktualizace"
@@ -190,8 +212,7 @@
                     android:ems="10"
                     android:id="@+id/minLatencyInput"
                     android:layout_weight="1"
-                    android:textAlignment="center"
-                    android:selectAllOnFocus="false" />
+                    android:textAlignment="center" />
 
                 <TextView
                     android:text="@string/hours"
