@@ -60,7 +60,7 @@ public class OverlayActivity extends AppCompatActivity{
         // Set info about the caller
         callerInfo = (TextView)findViewById(R.id.callerInfo);
 
-        callerInfo.setText(NotificationInfo.callerOrder);
+        callerInfo.setText(NotificationInfo.callerOrderSpanned);
 
 
         // listener for closing the activity

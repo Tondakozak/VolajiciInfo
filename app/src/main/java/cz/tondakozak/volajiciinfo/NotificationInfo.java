@@ -17,6 +17,8 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.Gravity;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -31,6 +33,7 @@ import org.json.JSONObject;
  */
 public class NotificationInfo extends Fragment{
     public static String callerOrder = "No Info";
+    public static Spanned callerOrderSpanned = null;
 
     public static boolean autoHideDialog;
     public static int autoHideDialogDelay;
@@ -40,6 +43,7 @@ public class NotificationInfo extends Fragment{
      * @param context
      * @param tel
      */
+
     public static void showCallerInfo(Context context, String tel) {
         // get info about caller form db
         PeopleDB peopleDB = new PeopleDB(context);
@@ -58,7 +62,7 @@ public class NotificationInfo extends Fragment{
                 infoArray = new JSONArray(caller.getString(caller.getColumnIndex("info")));
 
                 for (int jsonItemId = 0; jsonItemId < infoArray.length(); jsonItemId++) {
-                    info += infoArray.get(jsonItemId);
+                    info += "<p>"+infoArray.get(jsonItemId)+"</p>";
                     info += "\n";
                 }
             } catch (JSONException e) {
@@ -76,6 +80,14 @@ public class NotificationInfo extends Fragment{
             callerOrder = "Neznámý volající";
 
         }
+
+        // create spanned version (for render HTML code)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            callerOrderSpanned = Html.fromHtml(callerOrder, Html.TO_HTML_PARAGRAPH_LINES_CONSECUTIVE);
+        } else {
+            callerOrderSpanned = Html.fromHtml(callerOrder);
+        }
+
 
         // start activity for showing info
         Intent i = new Intent(context, OverlayActivity.class);
