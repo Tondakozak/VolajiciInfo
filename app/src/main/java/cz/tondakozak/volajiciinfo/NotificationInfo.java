@@ -19,6 +19,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -103,6 +104,9 @@ public class NotificationInfo extends Fragment{
         } else {
             callerOrderSpanned = Html.fromHtml(callerOrder);
         }
+
+
+        Log.d("NotificationInfo", "telefon: "+tel);
     }
 
     public static void setAutoHide(Context context) {

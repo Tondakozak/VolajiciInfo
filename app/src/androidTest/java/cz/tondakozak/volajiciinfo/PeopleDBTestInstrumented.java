@@ -58,12 +58,12 @@ public class PeopleDBTestInstrumented {
 
     @Test
     public void insertTest() {
-        peopleDB.insertOrUpdateMan("+420774423107", "tonda", "Kozák", "orderInfo", "infoInfo");
+        peopleDB.insertOrUpdateMan("+420774423107", "[\"tonda\", \"Kozák\", \"orderInfo\", \"infoInfo]\"");
     }
 
     @Test
     public void getManTest() {
-        peopleDB.insertOrUpdateMan("+420774423107", "tonda", "Kozák", "orderInfo", "infoInfo");
+        peopleDB.insertOrUpdateMan("+420774423107", "[\"tonda\", \"Kozák\", \"orderInfo\", \"infoInfo]\"");
         Cursor man = peopleDB.getMan("+420774423107");
 
         assertEquals(1, man.getCount());
@@ -72,7 +72,7 @@ public class PeopleDBTestInstrumented {
 
     @Test
     public void getManTestWithoutCode() {
-        peopleDB.insertOrUpdateMan("774423107", "tonda", "Kozák", "orderInfo", "infoInfo");
+        peopleDB.insertOrUpdateMan("774423107", "[\"tonda\", \"Kozák\", \"orderInfo\", \"infoInfo]\"");
         Cursor man = peopleDB.getMan("+420774423107");
 
         assertEquals(1, man.getCount());
@@ -80,20 +80,21 @@ public class PeopleDBTestInstrumented {
 
     @Test
     public void getMan2InsertsTest() {
-        peopleDB.insertOrUpdateMan("+4207744231078", "tonda", "Kozák", "orderInfo", "infoInfo");
-        peopleDB.insertOrUpdateMan("+4207744231078", "tonda", "KozákTonda", "orderInfo", "infoInfo");
-        Cursor man = peopleDB.getMan("+4207744231078");
+        peopleDB.deleteData();
+        peopleDB.insertOrUpdateMan("+420774423107", "[\"Jan\", \"Milíč\", \"orderInfo\", \"infoInfo]\"");
+        peopleDB.insertOrUpdateMan("+420774423155", "[\"tonda\", \"Kozák\", \"orderInfo\", \"infoInfo]\"");
+        Cursor man = peopleDB.getMan("+420774423107");
 
         assertEquals(1, man.getCount());
 
         man.moveToFirst();
-        assertEquals("KozákTonda", man.getString(man.getColumnIndex("surname")));
-        assertEquals(1, peopleDB.getNumberOfPeople());
+        assertEquals("[\"Jan\", \"Milíč\", \"orderInfo\", \"infoInfo]\"", man.getString(man.getColumnIndex("info")));
+        assertEquals(2, peopleDB.getNumberOfPeople());
     }
 
     @Test
     public void getNoManTest() {
-        //peopleDB.insertOrUpdateMan("+420774423107", "tonda", "Kozák", "orderInfo", "infoInfo");
+        peopleDB.insertOrUpdateMan("+420774423107", "[\"tonda\", \"Kozák\", \"orderInfo\", \"infoInfo]\"");
         Cursor man = peopleDB.getMan("+420774423107-t");
 
         assertEquals(0, man.getCount());
@@ -101,25 +102,25 @@ public class PeopleDBTestInstrumented {
 
 
     public void updateDBValuesTest() {
-        String jsonString = "[\n" +
-                "  {\"tel\": \"sdssdfasdfdsd\", \"firstname\":\"Lukáš\", \"surname\":\"1Kozák\", \"order\":\"malawi\"},\n" +
-                "  \n" +
-                "  {\"tel\": \"sdsd22sd\", \"firstname\":\"gdftonda\", \"surname\":\"Kozák\", \"order\":\"malawi\"},\n" +
-                "  \n" +
-                "  {\"tel\": \"6589sdsdsd\", \"firstname\":\"ddtonda\", \"surname\":\"2Kozák\", \"order\":\"2malawi\"}]";
+        String jsonString = "[" +
+                "      {\"tel\": \"+420787545121\", \"lines\":[\"tonda\", \"Kozák\", \"<b>objednávka</b>\"]}," +
+                "      {\"tel\": \"+4207875451251\", \"lines\": [\"<b>Lukáš</b>\", \"surname\",\"Novák\", \"order\",\"Informace o objednávce\"]}," +
+                "      {\"tel\": \"+420658231428\", \"lines\": [\"Jiří\", \"Kličko\", \"order\",\"Informace o objednávce bla bla\"]}" +
+                "]";
+
         try {
             JSONArray jsonArray = new JSONArray(jsonString);
             peopleDB.updateDBValues(jsonArray);
 
-            Cursor man = peopleDB.getMan("sdssdfasdfdsd");
+            Cursor man = peopleDB.getMan("+420787545121");
 
             assertEquals(1, man.getCount());
 
-            Cursor man2 = peopleDB.getMan("sdsd22sd");
+            Cursor man2 = peopleDB.getMan("+4207875451251");
 
             assertEquals(1, man2.getCount());
 
-            Cursor man3 = peopleDB.getMan("6589sdsdsd");
+            Cursor man3 = peopleDB.getMan("+420658231428");
 
             assertEquals(1, man3.getCount());
 
@@ -130,10 +131,13 @@ public class PeopleDBTestInstrumented {
 
 
     public void updateDBValuesFormatTest() {
-        String jsonString = " [ {\"tel\": \"+420 787 545 121\", \"firstname\":\"Lukáš\", \"surname\":\"Novák\", \"order\":\"Informace o objednávce\"}," +
-                " {\"tel\": \"658231425\", \"firstname\":\"Jiří\", \"surname\":\"Kličko\", \"order\":\"Informace o objednávce bla bla\"}," +
-                " {\"tel\": \"774 423 107\", \"firstname\":\"Antonín\", \"surname\":\"Kozák\", \"order\":\"Lorem Ipsum je demonstrativní výplňový text používaný v tiskařském a knihařském průmyslu. \"}," +
-                " {\"tel\": \"+420421587931\", \"firstname\":\"Daniel\", \"surname\":\"Marko\", \"order\":\"Informace o objednávce bla bla bla\"}]";
+        String jsonString = "[" +
+                "      {\"tel\": \"+420787545121\", \"lines\":[\"tonda\", \"Kozák\", \"<b>objednávka</b>\"]}," +
+                "      {\"tel\": \"+420787545121\", \"lines\": [\"<b>Lukáš</b>\", \"surname\",\"Novák\", \"order\",\"Informace o objednávce\"]}," +
+                "      {\"tel\": \"+420658231428\", \"lines\": [\"Jiří\", \"Kličko\", \"order\",\"Informace o objednávce bla bla\"]}," +
+                "      {\"tel\": \"+420774423107\", \"lines\": [\"<u>Antonín</u>\",\"<h1 style'color: red;'>Kozák</h1>\", \"order\",\"Lorem Ipsum je demonstrativní výplňový text používaný v <b>tiskařském a knihařském </b>průmyslu. \"]}," +
+                "      {\"tel\": \"+420658231425\", \"lines\": [\"<u>Antonín</u>\",\"<h1 style'color: red;'>Kozák</h1>\", \"order\",\"Lorem Ipsum je demonstrativní výplňový text používaný v <b>tiskařském a knihařském </b>průmyslu. \", \"Lorem Ipsum je demonstrativní výplňový text používaný v <b>tiskařském a knihařském </b>průmyslu. \",\"Lorem Ipsum je demonstrativní výplňový text používaný v <b>tiskařském a knihařském </b>průmyslu. \",\"Lorem Ipsum je demonstrativní výplňový text používaný v <b>tiskařském a knihařském </b>průmyslu. \",\"Lorem Ipsum je demonstrativní výplňový text používaný v <b>tiskařském a knihařském </b>průmyslu. \",\"Lorem Ipsum je demonstrativní výplňový text používaný v <b>tiskařském a knihařském </b>průmyslu. \",\"Lorem Ipsum je demonstrativní výplňový text používaný v <b>tiskařském a knihařském </b>průmyslu. \",\"Lorem Ipsum je demonstrativní výplňový text používaný v <b>tiskařském a knihařském </b>průmyslu. \",\"Lorem Ipsum je demonstrativní výplňový text používaný v <b>tiskařském a knihařském </b>průmyslu. \",\"Lorem Ipsum je demonstrativní výplňový text používaný v <b>tiskařském a knihařském </b>průmyslu. \"]}]";
+
         try {
             JSONArray jsonArray = new JSONArray(jsonString);
             peopleDB.updateDBValues(jsonArray);
@@ -149,6 +153,96 @@ public class PeopleDBTestInstrumented {
             Cursor man3 = peopleDB.getMan("+420774423107");
 
             assertEquals(1, man3.getCount());
+
+        } catch (JSONException e) {
+            fail();
+        }
+    }
+
+
+    public void getFullDialingCodeTest() {
+        String tNumber = "+420774423107";
+        String expectedDialingCode = "+420";
+        String fullDialingCode = peopleDB.getFullDialingCode(tNumber);
+
+        assertEquals(expectedDialingCode, fullDialingCode);
+    }
+
+
+    public void getFullDialingCodeTest1() {
+        String tNumber = "01144774423107";
+        String expectedDialingCode = "01144";
+        String fullDialingCode = peopleDB.getFullDialingCode(tNumber);
+
+        assertEquals(expectedDialingCode, fullDialingCode);
+    }
+
+
+    public void getFullDialingCodeTest2() {
+        String tNumber = "00421774423107";
+        String expectedDialingCode = "00421";
+        String fullDialingCode = peopleDB.getFullDialingCode(tNumber);
+
+        assertEquals(expectedDialingCode, fullDialingCode);
+    }
+
+
+    public void getFullDialingCodeTest3() {
+        String tNumber = "466423107";
+        String expectedDialingCode = "";
+        String fullDialingCode = peopleDB.getFullDialingCode(tNumber);
+
+        assertEquals(expectedDialingCode, fullDialingCode);
+    }
+
+
+    public void getNumberWithoutCodeTest() {
+        String tNumber = "+420466423107";
+        String expectedNumber = "466423107";
+        String number = peopleDB.removeDialingCode(tNumber);
+
+        assertEquals(expectedNumber, number);
+    }
+
+    public void getNumberWithoutCodeTest1() {
+        String tNumber = "00420466423107";
+        String expectedNumber = "466423107";
+        String number = peopleDB.removeDialingCode(tNumber);
+
+        assertEquals(expectedNumber, number);
+    }
+
+    public void getNumberWithoutCodeTest2() {
+        String tNumber = "466423107";
+        String expectedNumber = "466423107";
+        String number = peopleDB.removeDialingCode(tNumber);
+
+        assertEquals(expectedNumber, number);
+    }
+
+    public void getManWithoutCode() {
+        String jsonString = "[" +
+                "      {\"tel\": \"+420787545121\", \"lines\":[\"tonda\", \"Kozák\", \"<b>objednávka</b>\"]}," +
+                "      {\"tel\": \"+420787545111\", \"lines\": [\"<b>Lukáš</b>\", \"surname\",\"Novák\", \"order\",\"Informace o objednávce\"]}," +
+                "      {\"tel\": \"+420658231428\", \"lines\": [\"Jiří\", \"Kličko\", \"order\",\"Informace o objednávce bla bla\"]}," +
+                "      {\"tel\": \"+421658231428\", \"lines\": [\"<u>Antonín</u>\",\"<h1 style'color: red;'>Kozák</h1>\", \"order\",\"Lorem Ipsum je demonstrativní výplňový text používaný v <b>tiskařském a knihařském </b>průmyslu. \"]}," +
+                "      {\"tel\": \"+420658231425\", \"lines\": [\"<u>Antonín</u>\",\"<h1 style'color: red;'>Kozák</h1>\", \"order\",\"Lorem Ipsum je demonstrativní výplňový text používaný v <b>tiskařském a knihařském </b>průmyslu. \"]}]";
+
+        try {
+            JSONArray jsonArray = new JSONArray(jsonString);
+            peopleDB.updateDBValues(jsonArray);
+
+            Cursor man = peopleDB.getManWithoutCode("787545121");
+
+            assertEquals(1, man.getCount());
+
+            Cursor man2 = peopleDB.getManWithoutCode("+420658231428");
+
+            assertEquals(2, man2.getCount());
+
+            Cursor man3 = peopleDB.getManWithoutCode("658231428");
+
+            assertEquals(2, man3.getCount());
 
         } catch (JSONException e) {
             fail();
