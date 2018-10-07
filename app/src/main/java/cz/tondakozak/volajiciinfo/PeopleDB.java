@@ -92,9 +92,9 @@ public class PeopleDB {
     public Cursor getManWithoutCode(String callerNumber) {
         SQLiteDatabase db = openHelper.getReadableDatabase();
 
-        String[] selectionArgs = {"%"+callerNumber};
+        String[] selectionArgs = {"%"+callerNumber+"%"};
         String[] columns = {"tel", "info"};
-        return db.query(TABLE_NAME, columns, "tel LIKE ", selectionArgs,
+        return db.query(TABLE_NAME, columns, "tel LIKE ?", selectionArgs,
                 null, null, null, "10");
     }
 

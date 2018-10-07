@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 String searchNumber = s.toString();
                 String info = "";
-                if (searchNumber.equals("")) {
+                if (searchNumber.length() < 3) {
                     info = "";
                     manualSearchInfo.setText(info);
                 } else {

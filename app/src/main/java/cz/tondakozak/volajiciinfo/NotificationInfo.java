@@ -42,7 +42,6 @@ public class NotificationInfo extends Fragment{
     /**
      * Show info about caller - find number in the db and start Overlay Activity
      * @param context
-     * @param tel
      */
 
     public static void showCallerInfo(Context context) {
@@ -64,7 +63,7 @@ public class NotificationInfo extends Fragment{
     public static void setCallerInfo(Context context, String tel) {
         // get info about caller form db
         PeopleDB peopleDB = new PeopleDB(context);
-        Cursor caller = peopleDB.getMan(tel);
+        Cursor caller = peopleDB.getManWithoutCode(tel);
 
         // set values for auto-hide dialog
         setAutoHide(context);
@@ -75,17 +74,29 @@ public class NotificationInfo extends Fragment{
             String info = "";
             JSONArray infoArray = new JSONArray();
 
-            try {
-                infoArray = new JSONArray(caller.getString(caller.getColumnIndex("info")));
-
-                for (int jsonItemId = 0; jsonItemId < infoArray.length(); jsonItemId++) {
-                    info += "<p>"+infoArray.get(jsonItemId)+"</p>";
-                    info += "\n";
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+            // show info if there is more than 1 number in DB
+            if (caller.getCount() > 1) {
+                info += "<p><b>"+caller.getCount()+" čísla nalezena!</b></p>";
+                info += "<p><b>Volá: "+tel+"</b></p>";
             }
+            for (int manId = 0; manId < caller.getCount(); manId++) {
+                try {
+                    if (caller.getCount() > 1) {
+                        info += "<h2>"+caller.getString(caller.getColumnIndex("tel"))+"</h2>";
+                    }
+                    infoArray = new JSONArray(caller.getString(caller.getColumnIndex("info")));
 
+                    for (int jsonItemId = 0; jsonItemId < infoArray.length(); jsonItemId++) {
+                        info += "<p>" + infoArray.get(jsonItemId) + "</p>";
+                        info += "\n";
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                // move cursor to the next item
+                caller.moveToNext();
+            }
 
 
 
