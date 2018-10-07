@@ -30,7 +30,7 @@ public class SettingActivity extends AppCompatActivity {
     Resources res;
     SharedPreferences sharedPreferences;
     PeopleDB peopleDB;
-    
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -122,4 +122,5 @@
     <string name="seconds">Sekund</string>
     <string name="delay">Prodleva:</string>
     <string name="beh_systemu">Běh aplikace na pozadí</string>
+    <string name="search_tel_number">Hledat telefonní číslo</string>
 </resources>

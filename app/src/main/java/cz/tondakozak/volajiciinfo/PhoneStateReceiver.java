@@ -31,7 +31,8 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                 //Toast.makeText(context,"Ringing State Number is -"+incomingNumber,Toast.LENGTH_SHORT).show();
 
                 // notify about caller
-                NotificationInfo.showCallerInfo(context, incomingNumber);
+                NotificationInfo.setCallerInfo(context, incomingNumber);
+                NotificationInfo.showCallerInfo(context);
             } else if (state.equals(TelephonyManager.EXTRA_STATE_IDLE)) {
 
                 // If the phone is idle (end of call) close notification activity

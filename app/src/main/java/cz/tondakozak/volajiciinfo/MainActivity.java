@@ -13,7 +13,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
     Resources res;
     SharedPreferences sharedPreferences;
     PeopleDB peopleDB;
+
+    EditText manualSearchInput;
+    TextView manualSearchInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +74,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+        manualSearchInput = findViewById(R.id.findNumberInput);
+        manualSearchInfo = findViewById(R.id.manualSearchInfo);
 
+        setManualSearch(manualSearchInput, manualSearchInfo);
     }
 
 
@@ -135,5 +145,41 @@ public class MainActivity extends AppCompatActivity {
     public void clickSettingButton(View view) {
         Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
+    }
+
+
+
+    private void setManualSearch(EditText searchInput, final TextView manualSearchInfo) {
+        // min latency setting
+
+
+        searchInput.clearFocus();
+
+        // manage searching
+        searchInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                String searchNumber = s.toString();
+                String info = "";
+                if (searchNumber.equals("")) {
+                    info = "";
+                    manualSearchInfo.setText(info);
+                } else {
+                    NotificationInfo.setCallerInfo(appContext, searchNumber);
+                    manualSearchInfo.setText(NotificationInfo.callerOrderSpanned);
+                }
+
+
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) { }
+        });
     }
 }

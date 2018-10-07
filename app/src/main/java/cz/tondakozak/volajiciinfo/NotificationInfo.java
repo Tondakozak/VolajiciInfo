@@ -44,7 +44,23 @@ public class NotificationInfo extends Fragment{
      * @param tel
      */
 
-    public static void showCallerInfo(Context context, String tel) {
+    public static void showCallerInfo(Context context) {
+
+        // start activity for showing info
+        Intent i = new Intent(context, OverlayActivity.class);
+        //i.putExtras(intent);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        try {
+            // Wait 1 second to ensure the activity will be over native phone app
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        context.startActivity(i);
+    }
+
+    public static void setCallerInfo(Context context, String tel) {
         // get info about caller form db
         PeopleDB peopleDB = new PeopleDB(context);
         Cursor caller = peopleDB.getMan(tel);
@@ -87,20 +103,6 @@ public class NotificationInfo extends Fragment{
         } else {
             callerOrderSpanned = Html.fromHtml(callerOrder);
         }
-
-
-        // start activity for showing info
-        Intent i = new Intent(context, OverlayActivity.class);
-        //i.putExtras(intent);
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        try {
-            // Wait 1 second to ensure the activity will be over native phone app
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        context.startActivity(i);
     }
 
     public static void setAutoHide(Context context) {
