@@ -34,6 +34,7 @@ import org.json.JSONObject;
  */
 public class NotificationInfo extends Fragment{
     public static String callerOrder = "No Info";
+    public static String callerNumber = "";
     public static Spanned callerOrderSpanned = null;
 
     public static boolean autoHideDialog;
@@ -80,7 +81,14 @@ public class NotificationInfo extends Fragment{
                 info += "<p><b>Volá: "+tel+"</b></p>";
             }
             for (int manId = 0; manId < caller.getCount(); manId++) {
+
                 try {
+                    if (caller.getCount()==1) {
+                        callerNumber = caller.getString(caller.getColumnIndex("tel"));
+                    } else {
+                        callerNumber = "";
+                    }
+
                     if (caller.getCount() > 1) {
                         info += "<h2>"+caller.getString(caller.getColumnIndex("tel"))+"</h2>";
                     }

@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     EditText manualSearchInput;
     TextView manualSearchInfo;
+    TextView callerNumberManualSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +77,9 @@ public class MainActivity extends AppCompatActivity {
 
         manualSearchInput = findViewById(R.id.findNumberInput);
         manualSearchInfo = findViewById(R.id.manualSearchInfo);
+        callerNumberManualSearch = findViewById(R.id.callerNumberManualSearch);
 
-        setManualSearch(manualSearchInput, manualSearchInfo);
+        setManualSearch(manualSearchInput, manualSearchInfo, callerNumberManualSearch);
     }
 
 
@@ -149,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private void setManualSearch(EditText searchInput, final TextView manualSearchInfo) {
+    private void setManualSearch(EditText searchInput, final TextView manualSearchInfo, final  TextView callerNumberManualSearch) {
         // min latency setting
 
 
@@ -166,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
                     manualSearchInfo.setText(info);
                 } else {
                     NotificationInfo.setCallerInfo(appContext, searchNumber);
+                    callerNumberManualSearch.setText(NotificationInfo.callerNumber);
                     manualSearchInfo.setText(NotificationInfo.callerOrderSpanned);
                 }
 
