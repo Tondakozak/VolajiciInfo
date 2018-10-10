@@ -130,41 +130,41 @@ public class Util {
                 (Request.Method.POST, url,
                         new Response.Listener<String>() {
 
-        @Override
-                    public void onResponse(String response) {
-                        PeopleDB peopleDB = new PeopleDB(context);
-                        Log.d("Download", response.toString());
-                        try {
-                            // Convert response string to JSON
-                            JSONObject toJson = new JSONObject(response);
+                            @Override
+                            public void onResponse(String response) {
+                                PeopleDB peopleDB = new PeopleDB(context);
+                                Log.d("Download", response.toString());
+                                try {
+                                    // Convert response string to JSON
+                                    JSONObject toJson = new JSONObject(response);
 
-                            // Update db in the phone
-                            peopleDB.updateDBValues(toJson.getJSONArray("data"));
-                        } catch (JSONException e) {
-                            Toast.makeText(context, context.getString(R.string.json_wrong_format),Toast.LENGTH_LONG).show();
-                            e.printStackTrace();
-                        }
+                                    // Update db in the phone
+                                    peopleDB.updateDBValues(toJson.getJSONArray("data"));
+                                } catch (JSONException e) {
+                                    Toast.makeText(context, context.getString(R.string.json_wrong_format),Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
 
-                        // save time of downloading
-                        Calendar c = Calendar.getInstance();
-                        SimpleDateFormat df = new SimpleDateFormat("dd. MM. yyyy HH:mm:ss");
-                        String formattedDate = df.format(c.getTime());
+                                // save time of downloading
+                                Calendar c = Calendar.getInstance();
+                                SimpleDateFormat df = new SimpleDateFormat("dd. MM. yyyy HH:mm:ss");
+                                String formattedDate = df.format(c.getTime());
 
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString(context.getResources().getString(R.string.shared_pref_last_update), formattedDate);
-                        editor.commit();
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString(context.getResources().getString(R.string.shared_pref_last_update), formattedDate);
+                                editor.commit();
 
-                        // reload main activity - display current values
-                        Intent intent1 = new Intent(context.getResources().getString(R.string.receiverReload));
-                        context.sendBroadcast(intent1);
+                                // reload main activity - display current values
+                                Intent intent1 = new Intent(context.getResources().getString(R.string.receiverReload));
+                                context.sendBroadcast(intent1);
 
-                        // after successfull download, reschedule the job
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            Util.restartSchedulingJob(context);
-                        }
+                                // after successfull download, reschedule the job
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    Util.restartSchedulingJob(context);
+                                }
 
-                    }
-                }, new Response.ErrorListener() {
+                            }
+                        }, new Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
@@ -206,6 +206,68 @@ public class Util {
             {
                 Map<String, String>  params = new HashMap<String, String>();
                 params.put("key", context.getString(R.string.data_secret_key));
+
+                return params;
+            }
+        };
+
+        // add request to the queue
+        queue.add(jsonObjectRequest);
+    }
+
+
+
+
+
+    /**
+     * Upload data
+     * @param context
+     */
+    public static void uploadData(final Context context, final String data) {
+        RequestQueue queue = Volley.newRequestQueue(context);
+
+        // inform about downloading
+        //Toast.makeText(context, "VolajiciInfo: aktualizuji data",Toast.LENGTH_SHORT).show();
+
+        final String url = "https://www.tondakozak.cz/testy/callerinfo/simData.php";
+        //nal String url = "https://www.tondakozak.cz/testy/callerinfo/s";
+
+        Log.d("uploadData", "nahrávám");
+        // create new json request
+        StringRequest jsonObjectRequest = new StringRequest
+                (Request.Method.POST, url,
+                        new Response.Listener<String>() {
+
+                            @Override
+                            public void onResponse(String response) {
+                                Log.d("uploadData", response);
+                            }
+                        },
+                        new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                        Log.e("uploadData", error.getMessage());
+
+                            }
+                        }
+                 ) {
+            // add headers
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("Secret-Key", context.getString(R.string.data_secret_key));
+
+                return params;
+            }
+
+            // add post data
+            @Override
+            protected Map<String, String> getParams()
+            {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("key", context.getString(R.string.data_secret_key));
+                params.put("simInfo", data);
 
                 return params;
             }

@@ -33,6 +33,7 @@ public class OverlayActivity extends AppCompatActivity{
     };
 
     TextView callerInfo;
+    TextView callerSimSlot;
 
 
     // Auto hide activity
@@ -59,8 +60,10 @@ public class OverlayActivity extends AppCompatActivity{
 
         // Set info about the caller
         callerInfo = (TextView)findViewById(R.id.callerInfo);
+        callerSimSlot = (TextView)findViewById(R.id.callerSimSlot);
 
         callerInfo.setText(NotificationInfo.callerOrderSpanned);
+        callerSimSlot.setText(NotificationInfo.simSlot);
 
 
         // listener for closing the activity

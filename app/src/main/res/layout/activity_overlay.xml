@@ -16,8 +16,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/callerInfo"
+        android:layout_marginEnd="15dp"
+        android:layout_marginStart="16dp"
+        android:textAppearance="@android:style/TextAppearance.Material.Medium"
+        android:text="t"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintBottom_toTopOf="@+id/callerSimSlot" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/callerSimSlot"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginEnd="15dp"
         android:layout_marginStart="16dp"
-        android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+        android:textAppearance="@android:style/TextAppearance.Material.Medium"
+        android:text="SIM info"
+        android:textStyle="bold" />
 </android.support.constraint.ConstraintLayout>

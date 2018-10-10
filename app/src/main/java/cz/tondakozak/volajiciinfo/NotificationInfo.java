@@ -39,6 +39,7 @@ public class NotificationInfo extends Fragment{
 
     public static boolean autoHideDialog;
     public static int autoHideDialogDelay;
+    public static String simSlot = "";
 
     /**
      * Show info about caller - find number in the db and start Overlay Activity
@@ -80,18 +81,24 @@ public class NotificationInfo extends Fragment{
                 info += "<p><b>"+caller.getCount()+" čísla nalezena!</b></p>";
                 info += "<p><b>Volá: "+tel+"</b></p>";
             }
+
+            // show all items
             for (int manId = 0; manId < caller.getCount(); manId++) {
 
                 try {
+                    // set caller number only if only one item was found.
                     if (caller.getCount()==1) {
                         callerNumber = caller.getString(caller.getColumnIndex("tel"));
                     } else {
                         callerNumber = "";
                     }
 
+                    // if more than one caller was found, add tel number before the details
                     if (caller.getCount() > 1) {
                         info += "<h2>"+caller.getString(caller.getColumnIndex("tel"))+"</h2>";
                     }
+
+                    // show all lines, add them into separate paragraphs
                     infoArray = new JSONArray(caller.getString(caller.getColumnIndex("info")));
 
                     for (int jsonItemId = 0; jsonItemId < infoArray.length(); jsonItemId++) {
@@ -128,6 +135,10 @@ public class NotificationInfo extends Fragment{
         Log.d("NotificationInfo", "telefon: "+tel);
     }
 
+    /**
+     * Set parameter for auto hiding the dialog
+     * @param context
+     */
     public static void setAutoHide(Context context) {
         Context appContext = context;
         Resources res = appContext.getResources();
@@ -137,6 +148,17 @@ public class NotificationInfo extends Fragment{
         autoHideDialogDelay = sharedPreferences.getInt(res.getString(R.string.shared_pref_auto_hide_dialog_delay), res.getInteger(R.integer.def_auto_hide_dialog_delay));
         autoHideDialogDelay *= 1000; // convert seconds to milliseconds
 
+    }
+
+
+    public static void setSimSlot(int simSlot) {
+        String simSlotInfo;
+        if (simSlot == -1) {
+            simSlotInfo = "Info o SIM nejsou dostupné";
+        } else {
+            simSlotInfo = "Volá se na SIM "+simSlot;
+        }
+        NotificationInfo.simSlot = simSlotInfo;
     }
 
 
