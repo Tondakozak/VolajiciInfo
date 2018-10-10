@@ -289,7 +289,7 @@ public class Util {
      * @return
      */
     public static String addHTTPsProtocol(String url) {
-        if (!url.substring(0, 7).equals("http://") && !url.substring(0, 8).equals("https://")) {
+        if (url.length() > 9 && !url.substring(0, 7).equals("http://") && !url.substring(0, 8).equals("https://")) {
             return "https://"+url;
         } else {
             return url;
