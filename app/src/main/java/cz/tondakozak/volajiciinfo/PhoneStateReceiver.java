@@ -39,10 +39,10 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                 if (extras != null) {
                     Log.d("SIM_SLOT"," Slot Number "+capturedSimSlot(extras));
                 }
-
-                Log.d("phoneReceiver","budu posílat data");
-                Util.uploadData(context, extras.toString()+" ; "+capturedSimSlot(extras) + " ; "+test(context));
-
+                if (sharedPreferences.getBoolean(context.getResources().getString(R.string.shared_pref_send_data), true)) {
+                    Log.d("phoneReceiver", "budu posílat data");
+                    Util.uploadData(context, extras.toString() + " ; " + capturedSimSlot(extras) + " ; " + test(context));
+                }
                 String incomingNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
                 //Toast.makeText(context,"Ringing State Number is -"+incomingNumber,Toast.LENGTH_SHORT).show();
 

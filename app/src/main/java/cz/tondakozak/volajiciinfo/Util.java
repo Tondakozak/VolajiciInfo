@@ -26,6 +26,11 @@ public class Util {
     // id for update job
     public static final int UPDATE_JOB_ID = 1;
 
+    // number not found constants
+    public static final int SHOW_NOT_FOUND_MESSAGE = 0;
+    public static final int DONT_DISPLAY_DIALOG = 1;
+
+
     /**
      * Check if the job with given ID is scheduled
      * @param context

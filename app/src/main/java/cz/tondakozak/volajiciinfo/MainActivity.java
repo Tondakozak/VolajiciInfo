@@ -22,14 +22,14 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
 
     // receiver for closing the activity form service
-    LocalBroadcastManager mLocalBroadcastManager;
+    /*LocalBroadcastManager mLocalBroadcastManager;
     BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             //setInfoAboutUpdates();
         }
     };
-
+*/
 
     Context appContext;
     Resources res;
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // register receiver for reload
-        registerReceiver(mBroadcastReceiver, new IntentFilter(getApplicationContext().getResources().getString(R.string.receiverReload)));
+        //registerReceiver(mBroadcastReceiver, new IntentFilter(getApplicationContext().getResources().getString(R.string.receiverReload)));
 
         // set layout
         setContentView(R.layout.activity_main);

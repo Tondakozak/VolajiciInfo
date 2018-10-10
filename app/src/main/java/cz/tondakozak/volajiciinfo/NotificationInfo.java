@@ -1,32 +1,18 @@
 package cz.tondakozak.volajiciinfo;
 
-import android.annotation.TargetApi;
 import android.app.*;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.PixelFormat;
-import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompat;
-import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.WindowManager;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Holds information about current caller
@@ -36,6 +22,8 @@ public class NotificationInfo extends Fragment{
     public static String callerOrder = "No Info";
     public static String callerNumber = "";
     public static Spanned callerOrderSpanned = null;
+
+    public static boolean numberFound = false;
 
     public static boolean autoHideDialog;
     public static int autoHideDialogDelay;
@@ -48,6 +36,16 @@ public class NotificationInfo extends Fragment{
 
     public static void showCallerInfo(Context context) {
 
+        // should be dialog displayed if the number wasn't found
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        Resources res = context.getResources();
+        final int numberNotFoundValue= sharedPreferences.getInt(res.getString(R.string.shared_pref_number_not_found), 0);
+        // do not start activity if the number is not in db and in setting is that message should not be displayed
+        if (!numberFound) {
+            if (numberNotFoundValue == Util.DONT_DISPLAY_DIALOG) {
+                return;
+            }
+        }
         // start activity for showing info
         Intent i = new Intent(context, OverlayActivity.class);
         //i.putExtras(intent);
@@ -60,6 +58,7 @@ public class NotificationInfo extends Fragment{
             e.printStackTrace();
         }
         context.startActivity(i);
+
     }
 
     public static void setCallerInfo(Context context, String tel) {
@@ -70,6 +69,7 @@ public class NotificationInfo extends Fragment{
         // set values for auto-hide dialog
         setAutoHide(context);
 
+        NotificationInfo.numberFound = caller.getCount() > 0;
         if (caller.getCount() > 0) { // if the number is in DB
             caller.moveToFirst();
 
@@ -121,7 +121,6 @@ public class NotificationInfo extends Fragment{
         } else {
             // if the number was not found
             callerOrder = "Neznámý volající";
-
         }
 
         // create spanned version (for render HTML code)
