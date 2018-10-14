@@ -125,7 +125,7 @@ public class NotificationInfo extends Fragment{
 
         // create spanned version (for render HTML code)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            callerOrderSpanned = Html.fromHtml(callerOrder, Html.TO_HTML_PARAGRAPH_LINES_CONSECUTIVE);
+            callerOrderSpanned = Html.fromHtml(callerOrder, Html.FROM_HTML_MODE_COMPACT|Html.FROM_HTML_OPTION_USE_CSS_COLORS);
         } else {
             callerOrderSpanned = Html.fromHtml(callerOrder);
         }
