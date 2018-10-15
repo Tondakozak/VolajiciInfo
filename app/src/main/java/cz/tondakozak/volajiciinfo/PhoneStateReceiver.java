@@ -32,22 +32,18 @@ public class PhoneStateReceiver extends BroadcastReceiver {
             // If the phone is ringing
             if (state.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
 
-                String slot = (String) intent.toString();
 
-                Log.d("bundle", slot);
-                Bundle extras = intent.getExtras();
-                if (extras != null) {
-                    Log.d("SIM_SLOT"," Slot Number "+capturedSimSlot(extras));
-                }
+
+                // send data
                 if (sharedPreferences.getBoolean(context.getResources().getString(R.string.shared_pref_send_data), true)) {
-                    Log.d("phoneReceiver", "budu posílat data");
-                    Util.uploadData(context, extras.toString() + " ; " + capturedSimSlot(extras) + " ; " + test(context));
+                    //Log.d("phoneReceiver", "budu posílat data");
+                    //Util.uploadData(context, extras.toString() + " ; " + capturedSimSlot(extras) + " ; " + test(context));
                 }
                 String incomingNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
                 //Toast.makeText(context,"Ringing State Number is -"+incomingNumber,Toast.LENGTH_SHORT).show();
 
                 // notify about caller
-                NotificationInfo.setSimSlot(capturedSimSlot(extras));
+                //NotificationInfo.setSimSlot(capturedSimSlot(extras));
                 NotificationInfo.setCallerInfo(context, incomingNumber);
                 NotificationInfo.showCallerInfo(context);
             } else if (state.equals(TelephonyManager.EXTRA_STATE_IDLE)) {
@@ -61,34 +57,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
 
 
 
-    public int capturedSimSlot(Bundle bundle){
 
-        int whichSIM =-1;
-        if (bundle.containsKey("subscription")) {
-            whichSIM = bundle.getInt("subscription");
-        }
-        if(whichSIM >=0 && whichSIM < 5){
-            /*In some device Subscription id is return as subscriber id*/
-            //sim = ""+whichSIM;
-            
-        }else{
-            if (bundle.containsKey("simId")) {
-                whichSIM = bundle.getInt("simId");
-            }else if (bundle.containsKey("com.android.phone.extra.slot")) {
-                whichSIM = bundle.getInt("com.android.phone.extra.slot");
-            }else{
-                String keyName = "";
-                for(String key : bundle.keySet()){
-                    if(key.contains("sim"))
-                        keyName =key;
-                }
-                if (bundle.containsKey(keyName)) {
-                    whichSIM = bundle.getInt(keyName);
-                }
-            }
-        }
-        return whichSIM;
-    }
 
 
     public String test(Context context) {
