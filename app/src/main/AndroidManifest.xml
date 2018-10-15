@@ -42,7 +42,7 @@
 
         <activity
             android:name=".OverlayActivity"
-            android:theme="@style/Theme.TransparentCompat" />
+            android:theme="@style/Theme.TransparentCompatMy" />
         <activity android:name=".SettingActivity"
             android:label="Setting">
             android:parentActivityName=".MainActivity"

@@ -8,7 +8,22 @@
     android:padding="8dp"
     android:layout_margin="16dp"
     android:fadingEdge="horizontal"
-    android:id="@+id/dialogOverlay">
+    android:id="@+id/dialogOverlay"
+    android:background="@drawable/barckground_border">
+
+    <TextView
+        android:text="@string/app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dialogTitle"
+        android:layout_marginTop="21dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@color/colorPrimaryDark" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -22,7 +37,9 @@
         android:text="t"
         android:layout_marginBottom="16dp"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintBottom_toTopOf="@+id/callerSimSlot" />
+        app:layout_constraintBottom_toTopOf="@+id/callerSimSlot"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/dialogTitle" />
 
     <TextView
         android:layout_width="wrap_content"

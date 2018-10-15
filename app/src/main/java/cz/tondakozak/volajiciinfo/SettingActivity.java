@@ -176,10 +176,13 @@ public class SettingActivity extends AppCompatActivity {
         Switch switchOnBackground = findViewById(R.id.switchOnBackground);
         Switch switchHideDialog = findViewById(R.id.switchHideDialog);
         Switch switchSendData = findViewById(R.id.switchSendData);
+        Switch switchHideDialogName = findViewById(R.id.switchHideDialogName);
 
         RadioGroup radioGroupNumberNotFound = findViewById(R.id.radioGroupNotFound);
 
         EditText delayInput = findViewById(R.id.hideDialogDelayInput);
+
+        SeekBar seekBarDialogAlpha = findViewById(R.id.seekBarDialogAlpha);
 
         setSwitchLaunchOnStart(switchLaunchOnStart);
 
@@ -190,6 +193,9 @@ public class SettingActivity extends AppCompatActivity {
 
         setNumberNotFound(radioGroupNumberNotFound);
         setSwitchSendData(switchSendData);
+
+        setSwitchHideDialogName(switchHideDialogName);
+        setDialogAlphaSeekBar(seekBarDialogAlpha);
     }
 
 
@@ -425,6 +431,61 @@ public class SettingActivity extends AppCompatActivity {
                         editor.commit();
                     }
                 }
+            }
+        });
+    }
+
+
+    private void setDialogAlphaSeekBar(SeekBar mySeekBar) {
+
+        // set saved value
+        final int dialogAlpha = sharedPreferences.getInt(res.getString(R.string.shared_pref_dialog_alpha), res.getInteger(R.integer.def_dialog_alpha));
+
+        mySeekBar.setProgress(dialogAlpha, true);
+
+
+        // onchange listener
+
+        mySeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                // save value
+                if (fromUser) {
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt(res.getString(R.string.shared_pref_dialog_alpha), progress);
+                    editor.commit();
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+    }
+
+    private void setSwitchHideDialogName(Switch mySwitch) {
+
+        // set value
+        final boolean hideDialogName = sharedPreferences.getBoolean(res.getString(R.string.shared_pref_hide_dialog_title), res.getBoolean(R.bool.def_hide_dialog_title));
+
+        mySwitch.setChecked(hideDialogName);
+
+        // set listener
+        mySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                // save
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean(appContext.getString(R.string.shared_pref_hide_dialog_title), isChecked);
+                editor.commit();
+
             }
         });
     }

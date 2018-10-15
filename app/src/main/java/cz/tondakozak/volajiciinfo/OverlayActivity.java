@@ -1,10 +1,8 @@
 package cz.tondakozak.volajiciinfo;
 
-import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.*;
+import android.content.res.Resources;
+import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -64,6 +62,20 @@ public class OverlayActivity extends AppCompatActivity{
 
         callerInfo.setText(NotificationInfo.callerOrderSpanned);
         callerSimSlot.setText(NotificationInfo.simSlot);
+
+
+        // set background alpha
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        Resources res = getApplicationContext().getResources();
+        final int dialogAlpha = sharedPreferences.getInt(res.getString(R.string.shared_pref_dialog_alpha), res.getInteger(R.integer.def_dialog_alpha));
+        View overlayDialog = findViewById(R.id.dialogOverlay);
+        overlayDialog.getBackground().setAlpha(dialogAlpha);
+
+
+        // show or hide dialog name
+        final boolean hideDialogTitle = sharedPreferences.getBoolean(res.getString(R.string.shared_pref_hide_dialog_title), res.getBoolean(R.bool.def_hide_dialog_title));
+        TextView dialogTitle = findViewById(R.id.dialogTitle);
+        dialogTitle.setVisibility((hideDialogTitle)?View.GONE:View.VISIBLE);
 
 
         // listener for closing the activity
