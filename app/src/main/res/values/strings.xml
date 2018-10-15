@@ -24,6 +24,9 @@
     <string name="shared_pref_auto_hide_dialog">autoHideDialog</string>
     <string name="shared_pref_auto_hide_dialog_delay">autoHideDialogDelay</string>
     <string name="shared_pref_number_not_found">numberNotFound</string>
+    <string name="shared_pref_send_data">sendData</string>
+    <string name="shared_pref_dialog_alpha">dialogAlpha</string>
+    <string name="shared_pref_hide_dialog_title">hideDialogName</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->
@@ -123,4 +126,11 @@
     <string name="delay">Prodleva:</string>
     <string name="beh_systemu">Běh aplikace na pozadí</string>
     <string name="search_tel_number">Hledat telefonní číslo</string>
+    <string name="send_diagnostic_data">Povolit odesílání diagnostických dat</string>
+    <string name="better_development">Usnadnění vývoje</string>
+    <string name="dialog_appearence">Vzhled dialogu</string>
+    <string name="hide_dialog_name">Skrýt název aplikace</string>
+    <string name="dialog_alpha">Průhlednost dialogu</string>
+    <string name="transparent">Průhledné</string>
+    <string name="not_transparent">Neprůhledné</string>
 </resources>

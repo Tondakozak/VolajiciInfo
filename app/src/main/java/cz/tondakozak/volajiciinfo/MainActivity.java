@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -22,14 +23,14 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
 
     // receiver for closing the activity form service
-    LocalBroadcastManager mLocalBroadcastManager;
+    /*LocalBroadcastManager mLocalBroadcastManager;
     BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             //setInfoAboutUpdates();
         }
     };
-
+*/
 
     Context appContext;
     Resources res;
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // register receiver for reload
-        registerReceiver(mBroadcastReceiver, new IntentFilter(getApplicationContext().getResources().getString(R.string.receiverReload)));
+        //registerReceiver(mBroadcastReceiver, new IntentFilter(getApplicationContext().getResources().getString(R.string.receiverReload)));
 
         // set layout
         setContentView(R.layout.activity_main);
@@ -147,6 +148,16 @@ public class MainActivity extends AppCompatActivity {
     public void clickSettingButton(View view) {
         Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
+    }
+
+
+    public void clickDialogButton(View view) {
+        String incomingNumber = "+420745454500";
+
+        // notify about caller
+        NotificationInfo.setSimSlot(1);
+        NotificationInfo.setCallerInfo(appContext, incomingNumber);
+        NotificationInfo.showCallerInfo(appContext);
     }
 
 

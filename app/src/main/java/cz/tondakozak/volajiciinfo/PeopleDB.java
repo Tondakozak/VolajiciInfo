@@ -92,6 +92,8 @@ public class PeopleDB {
     public Cursor getManWithoutCode(String callerNumber) {
         SQLiteDatabase db = openHelper.getReadableDatabase();
 
+        callerNumber = removeDialingCode(cleanNumberFormat(callerNumber));
+
         String[] selectionArgs = {"%"+callerNumber+"%"};
         String[] columns = {"tel", "info"};
         return db.query(TABLE_NAME, columns, "tel LIKE ?", selectionArgs,

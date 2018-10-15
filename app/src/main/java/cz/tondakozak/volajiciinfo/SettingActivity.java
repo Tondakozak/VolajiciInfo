@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
@@ -174,10 +175,14 @@ public class SettingActivity extends AppCompatActivity {
         Switch switchLaunchOnStart =  findViewById(R.id.switchLauchOnStart);
         Switch switchOnBackground = findViewById(R.id.switchOnBackground);
         Switch switchHideDialog = findViewById(R.id.switchHideDialog);
+        Switch switchSendData = findViewById(R.id.switchSendData);
+        Switch switchHideDialogName = findViewById(R.id.switchHideDialogName);
 
         RadioGroup radioGroupNumberNotFound = findViewById(R.id.radioGroupNotFound);
 
         EditText delayInput = findViewById(R.id.hideDialogDelayInput);
+
+        SeekBar seekBarDialogAlpha = findViewById(R.id.seekBarDialogAlpha);
 
         setSwitchLaunchOnStart(switchLaunchOnStart);
 
@@ -185,6 +190,12 @@ public class SettingActivity extends AppCompatActivity {
 
         setSwitchHideDialog(switchHideDialog);
         setHideDialogDelay(delayInput);
+
+        setNumberNotFound(radioGroupNumberNotFound);
+        setSwitchSendData(switchSendData);
+
+        setSwitchHideDialogName(switchHideDialogName);
+        setDialogAlphaSeekBar(seekBarDialogAlpha);
     }
 
 
@@ -328,6 +339,21 @@ public class SettingActivity extends AppCompatActivity {
         });
     }
 
+    private void setSwitchSendData(Switch mySwitch) {
+        // set value
+        final boolean sendData = sharedPreferences.getBoolean(res.getString(R.string.shared_pref_send_data), true);
+        mySwitch.setChecked(sendData);
+
+
+        mySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean(appContext.getString(R.string.shared_pref_send_data), isChecked);
+                editor.commit();
+            }
+        });
+    }
+
     private void setHideDialogDelay(EditText delayInput) {
         // min latency setting
 
@@ -366,21 +392,100 @@ public class SettingActivity extends AppCompatActivity {
         });
     }
 
-    private void setNumberNotFound(RadioGroup rGroup, SharedPreferences sharedPreferences) {
-        rGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-        {
-            public void onCheckedChanged(RadioGroup group, int checkedId)
-            {
+    private void setNumberNotFound(RadioGroup rGroup) {
+
+        // set saved value
+        final int numberNotFoundValue= sharedPreferences.getInt(res.getString(R.string.shared_pref_number_not_found), 0);
+        RadioButton checkedRadioButton = null;
+        switch (numberNotFoundValue) {
+            case Util.DONT_DISPLAY_DIALOG:
+                checkedRadioButton = findViewById(R.id.radioButtonDontDisplayDialog);
+                break;
+            case Util.SHOW_NOT_FOUND_MESSAGE:
+                checkedRadioButton = findViewById(R.id.radioButtonDialogNotFoundMessage);
+                break;
+        }
+
+        checkedRadioButton.setChecked(true);
+
+        rGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // This will get the radiobutton that has changed in its check state
                 RadioButton checkedRadioButton = (RadioButton)group.findViewById(checkedId);
                 // This puts the value (true/false) into the variable
                 boolean isChecked = checkedRadioButton.isChecked();
                 // If the radiobutton that has changed in check state is now checked...
-                if (isChecked)
-                {
-                    // Changes the textview's text to "Checked: example radiobutton text"
-                    //tv.setText("Checked:" + checkedRadioButton.getText());
+                if (isChecked) {
+
+                    int newNumberNotFound = -1;
+                    if (checkedId == R.id.radioButtonDialogNotFoundMessage) {
+                        newNumberNotFound = Util.SHOW_NOT_FOUND_MESSAGE;
+                    } else if (checkedId == R.id.radioButtonDontDisplayDialog) {
+                        newNumberNotFound = Util.DONT_DISPLAY_DIALOG;
+                    }
+
+                    Log.d("settingRadio", ""+newNumberNotFound);
+                    if (newNumberNotFound != -1) {
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putInt(res.getString(R.string.shared_pref_number_not_found), newNumberNotFound);
+                        editor.commit();
+                    }
                 }
+            }
+        });
+    }
+
+
+    private void setDialogAlphaSeekBar(SeekBar mySeekBar) {
+
+        // set saved value
+        final int dialogAlpha = sharedPreferences.getInt(res.getString(R.string.shared_pref_dialog_alpha), res.getInteger(R.integer.def_dialog_alpha));
+
+        mySeekBar.setProgress(dialogAlpha, true);
+
+
+        // onchange listener
+
+        mySeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                // save value
+                if (fromUser) {
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt(res.getString(R.string.shared_pref_dialog_alpha), progress);
+                    editor.commit();
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+    }
+
+    private void setSwitchHideDialogName(Switch mySwitch) {
+
+        // set value
+        final boolean hideDialogName = sharedPreferences.getBoolean(res.getString(R.string.shared_pref_hide_dialog_title), res.getBoolean(R.bool.def_hide_dialog_title));
+
+        mySwitch.setChecked(hideDialogName);
+
+        // set listener
+        mySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                // save
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean(appContext.getString(R.string.shared_pref_hide_dialog_title), isChecked);
+                editor.commit();
+
             }
         });
     }

@@ -1,32 +1,18 @@
 package cz.tondakozak.volajiciinfo;
 
-import android.annotation.TargetApi;
 import android.app.*;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.PixelFormat;
-import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompat;
-import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.WindowManager;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Holds information about current caller
@@ -37,8 +23,11 @@ public class NotificationInfo extends Fragment{
     public static String callerNumber = "";
     public static Spanned callerOrderSpanned = null;
 
+    public static boolean numberFound = false;
+
     public static boolean autoHideDialog;
     public static int autoHideDialogDelay;
+    public static String simSlot = "";
 
     /**
      * Show info about caller - find number in the db and start Overlay Activity
@@ -47,6 +36,16 @@ public class NotificationInfo extends Fragment{
 
     public static void showCallerInfo(Context context) {
 
+        // should be dialog displayed if the number wasn't found
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        Resources res = context.getResources();
+        final int numberNotFoundValue= sharedPreferences.getInt(res.getString(R.string.shared_pref_number_not_found), 0);
+        // do not start activity if the number is not in db and in setting is that message should not be displayed
+        if (!numberFound) {
+            if (numberNotFoundValue == Util.DONT_DISPLAY_DIALOG) {
+                return;
+            }
+        }
         // start activity for showing info
         Intent i = new Intent(context, OverlayActivity.class);
         //i.putExtras(intent);
@@ -59,6 +58,7 @@ public class NotificationInfo extends Fragment{
             e.printStackTrace();
         }
         context.startActivity(i);
+
     }
 
     public static void setCallerInfo(Context context, String tel) {
@@ -69,6 +69,7 @@ public class NotificationInfo extends Fragment{
         // set values for auto-hide dialog
         setAutoHide(context);
 
+        NotificationInfo.numberFound = caller.getCount() > 0;
         if (caller.getCount() > 0) { // if the number is in DB
             caller.moveToFirst();
 
@@ -80,18 +81,24 @@ public class NotificationInfo extends Fragment{
                 info += "<p><b>"+caller.getCount()+" čísla nalezena!</b></p>";
                 info += "<p><b>Volá: "+tel+"</b></p>";
             }
+
+            // show all items
             for (int manId = 0; manId < caller.getCount(); manId++) {
 
                 try {
+                    // set caller number only if only one item was found.
                     if (caller.getCount()==1) {
                         callerNumber = caller.getString(caller.getColumnIndex("tel"));
                     } else {
                         callerNumber = "";
                     }
 
+                    // if more than one caller was found, add tel number before the details
                     if (caller.getCount() > 1) {
                         info += "<h2>"+caller.getString(caller.getColumnIndex("tel"))+"</h2>";
                     }
+
+                    // show all lines, add them into separate paragraphs
                     infoArray = new JSONArray(caller.getString(caller.getColumnIndex("info")));
 
                     for (int jsonItemId = 0; jsonItemId < infoArray.length(); jsonItemId++) {
@@ -114,12 +121,11 @@ public class NotificationInfo extends Fragment{
         } else {
             // if the number was not found
             callerOrder = "Neznámý volající";
-
         }
 
         // create spanned version (for render HTML code)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            callerOrderSpanned = Html.fromHtml(callerOrder, Html.TO_HTML_PARAGRAPH_LINES_CONSECUTIVE);
+            callerOrderSpanned = Html.fromHtml(callerOrder, Html.FROM_HTML_MODE_COMPACT|Html.FROM_HTML_OPTION_USE_CSS_COLORS);
         } else {
             callerOrderSpanned = Html.fromHtml(callerOrder);
         }
@@ -128,6 +134,10 @@ public class NotificationInfo extends Fragment{
         Log.d("NotificationInfo", "telefon: "+tel);
     }
 
+    /**
+     * Set parameter for auto hiding the dialog
+     * @param context
+     */
     public static void setAutoHide(Context context) {
         Context appContext = context;
         Resources res = appContext.getResources();
@@ -137,6 +147,17 @@ public class NotificationInfo extends Fragment{
         autoHideDialogDelay = sharedPreferences.getInt(res.getString(R.string.shared_pref_auto_hide_dialog_delay), res.getInteger(R.integer.def_auto_hide_dialog_delay));
         autoHideDialogDelay *= 1000; // convert seconds to milliseconds
 
+    }
+
+
+    public static void setSimSlot(int simSlot) {
+        String simSlotInfo;
+        if (simSlot == -1) {
+            simSlotInfo = "Info o SIM nejsou dostupné";
+        } else {
+            simSlotInfo = "Volá se na SIM "+simSlot;
+        }
+        NotificationInfo.simSlot = simSlotInfo;
     }
 
 
