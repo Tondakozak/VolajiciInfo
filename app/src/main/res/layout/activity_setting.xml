@@ -396,8 +396,7 @@
                 android:text="@string/better_development"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView81"
-                android:visibility="gone" />
+                android:id="@+id/textView81" />
 
             <Switch
                 android:text="@string/send_diagnostic_data"
@@ -415,8 +414,7 @@
                 tools:layout_editor_absoluteX="8dp"
                 android:gravity="start"
                 android:paddingTop="@dimen/padding_value"
-                android:paddingBottom="@dimen/padding_value"
-                android:visibility="gone" />
+                android:paddingBottom="@dimen/padding_value" />
 
         </LinearLayout>
     </ScrollView>

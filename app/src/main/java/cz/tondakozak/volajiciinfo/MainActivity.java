@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -110,11 +111,15 @@ public class MainActivity extends AppCompatActivity {
      * @return
      */
     public boolean checkPermission(){
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.DISABLE_KEYGUARD) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.WAKE_LOCK) != PackageManager.PERMISSION_GRANTED
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.DISABLE_KEYGUARD) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.WAKE_LOCK) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED
                 ){
 
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_PHONE_STATE,Manifest.permission.DISABLE_KEYGUARD,Manifest.permission.WAKE_LOCK},
+                    new String[]{Manifest.permission.READ_PHONE_STATE,Manifest.permission.DISABLE_KEYGUARD,Manifest.permission.WAKE_LOCK, Manifest.permission.READ_CALL_LOG, Manifest.permission.READ_PHONE_NUMBERS},
                     123);
 
             return false;
@@ -133,7 +138,18 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case 123:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d("permissions", ""+grantResults[0]);
+
+                boolean allGranted = true;
+                for (int permissionId = 0; permissionId < grantResults.length; permissionId++) {
+                    if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                        allGranted = false;
+                    }
+                }
+
+
+                if (allGranted) {
+
                 } else {
                     // permission wasn't granted, ask again
                     checkPermission();
