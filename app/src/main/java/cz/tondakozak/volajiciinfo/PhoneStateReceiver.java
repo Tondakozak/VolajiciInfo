@@ -36,7 +36,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
 
             // If the phone is ringing
             if (state.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
-
+                /*
                 Bundle extra = intent.getExtras();
                 Log.d("PhoneState", extra.toString());
                 Log.d("PhoneStateSI", test(context));
@@ -48,6 +48,8 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                     Log.d("phoneReceiver", "budu posílat data");
                     Util.uploadData(context, extra.toString() + " ; " +test2(context));
                 }
+                */
+
                 String incomingNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
                 //Toast.makeText(context,"Ringing State Number is -"+incomingNumber,Toast.LENGTH_SHORT).show();
 
@@ -64,7 +66,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
         }
     }
 
-
+ /*
     public String test(Context context) {
         SubscriptionManager subscriptionManager = (SubscriptionManager) context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE);
 
@@ -81,8 +83,9 @@ public class PhoneStateReceiver extends BroadcastReceiver {
         return "";
 
     }
+*/
 
-
+    /*
     public String test2(Context context) {
 
         SubscriptionManager subscriptionManager = (SubscriptionManager) context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE);
@@ -118,7 +121,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
         }
 
         return result;
-    }
+    }*/
 
 
 
